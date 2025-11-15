@@ -1,7 +1,7 @@
 ---
 import { getCollection, getEntry, render, type CollectionEntry } from 'astro:content';
-import { isValidDate } from '@/utils/markdown';
-import { siteConfig } from '@/config';
+import { isValidDate, formatDate } from '@/utils/markdown';
+import { siteConfig, getPostCardAspectRatio } from '@/config';
 import { generateHomeSEO } from '@/utils/seo';
 import { shouldShowPost, shouldShowContent, sortPostsByDate, processPost } from '@/utils/markdown';
 import { hasProjectCategories } from '@/utils/categories';
@@ -10,7 +10,7 @@ import PostCard from '@/components/PostCard.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
 import DocumentationCard from '@/components/DocumentationCard.astro';
 import Icon from '@/components/Icon.astro';
-import { optimizePostImagePath } from '@/utils/images';
+import { optimizePostImagePath, optimizeContentImagePath } from '@/utils/images';
 
 // Get all posts and filter by visibility
 const allPosts = await getCollection('posts');
@@ -71,7 +71,31 @@ if (siteConfig.homeOptions.projects.enabled && siteConfig.optionalContentTypes.p
       })
       .slice(0, siteConfig.homeOptions.projects.count);
   }
+}
 
+// Get featured publications
+let featuredPublications: any[] = [];
+const allPublications = await getCollection('publications');
+const visiblePublications = allPublications.filter(publication => shouldShowContent(publication, isDev));
+
+const featuredOnlyPublications = visiblePublications.filter(publication => publication.data.featured);
+
+if (featuredOnlyPublications.length > 0) {
+  featuredPublications = featuredOnlyPublications
+    .sort((a, b) => {
+      const dateA = isValidDate(a.data.date) ? a.data.date : new Date(0);
+      const dateB = isValidDate(b.data.date) ? b.data.date : new Date(0);
+      return dateB.getTime() - dateA.getTime();
+    })
+    .slice(0, 10);
+} else if (visiblePublications.length > 0) {
+  featuredPublications = visiblePublications
+    .sort((a, b) => {
+      const dateA = isValidDate(a.data.date) ? a.data.date : new Date(0);
+      const dateB = isValidDate(b.data.date) ? b.data.date : new Date(0);
+      return dateB.getTime() - dateA.getTime();
+    })
+    .slice(0, 10);
 }
 
 // Get featured docs if enabled
@@ -176,6 +200,148 @@ const structuredData = {
 
   <div class="py-8 relative">
     <div class="mx-auto px-4 sm:px-6 lg:px-8" style={`max-width: ${siteConfig.layout.contentWidth}`}>
+      <!-- Profile Section -->
+      <section class="mb-16">
+        <div class="flex flex-col md:flex-row gap-8 items-start md:items-center">
+          <div class="flex-1">
+            <div class="text-3xl font-bold text-primary-900 dark:text-primary-50 mb-4">
+              Xin Duan 段欣
+            </div>
+            <div class="prose prose-sm dark:prose-dark max-w-none mb-4 text-lg">
+              <p>
+                I'm a student researcher at Shanghai Qi Zhi Institute, advised by
+                <a href="https://hangzhaomit.github.io/" class="text-highlight-600 dark:text-highlight-400 hover:underline">Hang Zhao</a>. I'm also a
+                third-year master's student in the
+                <a href="https://robotics.shanghaitech.edu.cn/" class="text-highlight-600 dark:text-highlight-400 hover:underline">MARS Lab</a>
+                , advised by
+                <a href="https://robotics.shanghaitech.edu.cn/" class="text-highlight-600 dark:text-highlight-400 hover:underline">Sören Schwertfeger</a>.
+                Before that, I completed my bachelor's degree in Computer
+                Science and Technology at ShanghaiTech University.
+              </p>
+              <p>My research interests are concentrated in Robot Learning.</p>
+            </div>
+          </div>
+          <div class="flex-shrink-0 self-start pt-12">
+            <img
+              src="/profile.jpg"
+              alt="Xin Duan profile photo"
+              class="size-60 rounded-lg object-cover border-2 border-primary-200 dark:border-primary-700"
+            />
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-4 text-primary-600 dark:text-primary-400">
+          <a href="mailto:duanxin926@gmail.com" class="flex items-center gap-2 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            <span>Email</span>
+          </a>
+          <span class="text-primary-300 dark:text-primary-600">/</span>
+          <a href="https://scholar.google.com/" class="flex items-center gap-2 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors">
+            <Icon name="book-open" class="w-5 h-5" />
+            <span>Scholar</span>
+          </a>
+          <span class="text-primary-300 dark:text-primary-600">/</span>
+          <a href="https://x.com/xinduan926" class="flex items-center gap-2 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors">
+            <Icon name="x-twitter" class="w-5 h-5" />
+            <span>Twitter</span>
+          </a>
+          <span class="text-primary-300 dark:text-primary-600">/</span>
+          <a href="https://github.com/duanxin926" class="flex items-center gap-2 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors">
+            <Icon name="github" class="w-5 h-5" />
+            <span>Github</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Publications Section -->
+      {featuredPublications.length > 0 && (
+        <section class="mb-16">
+          <h2 class="text-2xl font-semibold text-primary-900 dark:text-primary-50 mb-8">
+            Publications
+          </h2>
+          <div class="space-y-6">
+            {featuredPublications.map((publication) => {
+              let imagePath = publication.data.image;
+              if (typeof imagePath === 'string' && imagePath.startsWith('[[') && imagePath.endsWith(']]')) {
+                imagePath = imagePath.slice(2, -2);
+              }
+              console.log(publication)
+              console.log(imagePath);
+              const optimizedImage = imagePath ? optimizeContentImagePath(
+                imagePath,
+                'publications',
+                publication.id,
+                publication.id
+              ) : null;
+              
+              return (
+                <article class="group post-card" role="article">
+                  <a 
+                    href={publication.data.demoUrl || `/publications/${publication.id}`}
+                    class="block"
+                    target={publication.data.demoUrl ? "_blank" : undefined}
+                    rel={publication.data.demoUrl ? "noopener noreferrer" : undefined}
+                  >
+                    {optimizedImage && (
+                      <div class="overflow-hidden rounded-t-lg bg-primary-100 dark:bg-primary-800" style={`aspect-ratio: ${getPostCardAspectRatio()};`}>
+                        <img
+                          src={optimizedImage}
+                          alt={publication.data.imageAlt || `Cover image for ${publication.data.title}`}
+                          class="w-full h-full object-cover group-hover:scale-102 dark:group-hover:brightness-100 transition-all duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                    )}
+                    
+                    <div class={`p-4 ${optimizedImage ? 'rounded-b-lg' : 'rounded-lg'}`}>
+                      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-primary-500 dark:text-primary-400 mb-1">
+                        {isValidDate(publication.data.date) && (
+                          <time datetime={publication.data.date.toISOString()}>
+                            {formatDate(publication.data.date)}
+                          </time>
+                        )}
+                        {publication.data.categories && publication.data.categories.length > 0 && (
+                          <>
+                            <span class="text-primary-300 dark:text-primary-600">•</span>
+                            <span>{publication.data.categories[0]}</span>
+                          </>
+                        )}
+                      </div>
+
+                      <h3 class="text-lg font-medium text-primary-900 dark:text-primary-100 leading-relaxed group-hover:text-highlight-600 dark:group-hover:text-highlight-400 transition-colors">
+                        {publication.data.title}
+                      </h3>
+
+                      {publication.data.description && (
+                        <p class="text-primary-600 dark:text-primary-300 line-clamp-3 text-sm leading-relaxed mt-1">
+                          {publication.data.description}
+                        </p>
+                      )}
+
+                      <div class="flex flex-wrap items-center gap-3 mt-3 text-sm text-primary-600 dark:text-primary-400">
+                        {publication.data.demoUrl && (
+                          <span class="flex items-center gap-1">
+                            <Icon name="external-link" class="w-4 h-4" />
+                            website
+                          </span>
+                        )}
+                        {publication.data.repositoryUrl && (
+                          <span class="flex items-center gap-1">
+                            <Icon name="github" class="w-4 h-4" />
+                            code
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </a>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       {onlyBlurbContent ? (
         <!-- Blurb-only homepage with page-like layout -->
         <article class="bg-primary-50 dark:bg-primary-900 rounded-lg border border-primary-200 dark:border-primary-700 shadow-sm">

@@ -123,6 +123,35 @@ const docsCollection = defineCollection({
   }),
 });
 
+// Define schema for publications
+const publicationsCollection = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/publications' }),
+  schema: z.object({
+    title: z.string().default('Untitled Publication'),
+    description: z.string().nullable().optional().default('No description provided'),
+    date: z.coerce.date().default(() => new Date()),
+    categories: z.array(z.string()).nullable().optional().default([]),
+    repositoryUrl: z.string().url().nullable().optional(),
+    demoUrl: z.string().url().nullable().optional(),
+    status: z.string().nullable().optional(),
+    image: z.any().nullable().optional().transform((val) => {
+      if (Array.isArray(val)) {
+        return val[0] || null;
+      }
+      if (typeof val === 'string') {
+        return val;
+      }
+      return null;
+    }),
+    imageAlt: z.string().nullable().optional(),
+    hideCoverImage: z.boolean().optional(),
+    hideTOC: z.boolean().optional(),
+    draft: z.boolean().optional(),
+    noIndex: z.boolean().optional(),
+    featured: z.boolean().optional(),
+  }),
+});
+
 // Define schema for special home pages (homepage blurb, 404, projects index, docs index)
 const specialCollection = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/special' }),
@@ -140,6 +169,7 @@ export const collections = {
   posts: postsCollection,
   pages: pagesCollection,
   projects: projectsCollection,
+  publications: publicationsCollection,
   docs: docsCollection,
   special: specialCollection,
 };

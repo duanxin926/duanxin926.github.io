@@ -256,7 +256,7 @@ export function optimizePostImagePath(
 // Generic image optimization function for all content types
 export function optimizeContentImagePath(
   imagePath: string,
-  contentType: "posts" | "projects" | "documentation" | "pages",
+  contentType: "posts" | "projects" | "publications" | "documentation" | "pages",
   contentSlug?: string,
   contentId?: string
 ): string {

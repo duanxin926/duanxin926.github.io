@@ -12,7 +12,7 @@ const log = {
   warn: (...args) => console.warn(...args)
 };
 
-// Define source and target directories for posts, pages, projects, docs, and special
+// Define source and target directories for posts, pages, projects, publications, docs, and special
 const IMAGE_SYNC_CONFIGS = [
   {
     source: 'src/content/posts/attachments',
@@ -28,6 +28,11 @@ const IMAGE_SYNC_CONFIGS = [
     source: 'src/content/projects/attachments',
     target: 'public/projects/attachments',
     name: 'projects'
+  },
+  {
+    source: 'src/content/publications/attachments',
+    target: 'public/publications/attachments',
+    name: 'publications'
   },
   {
     source: 'src/content/docs/attachments',
@@ -367,7 +372,7 @@ async function syncAllImages() {
   }
 
   // Sync folder-based images for all content types
-  const contentTypes = ['posts', 'pages', 'projects', 'docs', 'special'];
+  const contentTypes = ['posts', 'pages', 'projects', 'publications', 'docs', 'special'];
   for (const contentType of contentTypes) {
     await syncFolderBasedImages(contentType);
   }

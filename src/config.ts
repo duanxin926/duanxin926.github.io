@@ -180,13 +180,13 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   // Site Information
   // [CONFIG:SITE_URL]
-  site: "https://astro-modular.netlify.app",
+  site: "https://duanxin926.github.io",
   // [CONFIG:SITE_TITLE]
-  title: "Astro Modular",
+  title: "Xin Duan",
   // [CONFIG:SITE_DESCRIPTION]
-  description: "A flexible blog theme designed for Obsidian users.",
+  description: "Student researcher at Shanghai Qi Zhi Institute, interested in Robot Learning.",
   // [CONFIG:SITE_AUTHOR]
-  author: "David V. Kimball",
+  author: "Xin Duan",
   // [CONFIG:SITE_LANGUAGE]
   language: "en",
   // [CONFIG:FAVICON_THEME_ADAPTIVE]
@@ -320,12 +320,12 @@ export const siteConfig: SiteConfig = {
     social: [
       {
         title: "X",
-        url: "https://x.com/davidvkimball",
+        url: "https://x.com/xinduan926",
         icon: "x-twitter",
       },
       {
         title: "GitHub",
-        url: "https://github.com/davidvkimball",
+        url: "https://github.com/duanxin926",
         icon: "github",
       },
     ],
@@ -359,7 +359,7 @@ export const siteConfig: SiteConfig = {
       // [CONFIG:HOME_OPTIONS_PROJECTS_ENABLED]
       enabled: true, // Show featured projects on homepage
       // [CONFIG:HOME_OPTIONS_PROJECTS_COUNT]
-      count: 2, // Number of projects to show
+      count: 3, // Number of projects to show
     },
     docs: {
       // [CONFIG:HOME_OPTIONS_DOCS_ENABLED]

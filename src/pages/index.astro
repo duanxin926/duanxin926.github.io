@@ -266,8 +266,6 @@ const structuredData = {
               if (typeof imagePath === 'string' && imagePath.startsWith('[[') && imagePath.endsWith(']]')) {
                 imagePath = imagePath.slice(2, -2);
               }
-              console.log(publication)
-              console.log(imagePath);
               const optimizedImage = imagePath ? optimizeContentImagePath(
                 imagePath,
                 'publications',
@@ -313,24 +311,54 @@ const structuredData = {
                         {publication.data.title}
                       </h3>
 
-                      {publication.data.description && (
-                        <p class="text-primary-600 dark:text-primary-300 line-clamp-3 text-sm leading-relaxed mt-1">
-                          {publication.data.description}
+                      {publication.data.authors && (
+                        <p class="text-primary-600 dark:text-primary-300 text-sm leading-relaxed mt-1">
+                          {publication.data.authors}
+                        </p>
+                      )}
+
+                      {publication.data.venue && (
+                        <p class="text-primary-500 dark:text-primary-400 text-sm font-medium mt-1">
+                          {publication.data.venue}
                         </p>
                       )}
 
                       <div class="flex flex-wrap items-center gap-3 mt-3 text-sm text-primary-600 dark:text-primary-400">
+                        {publication.data.arXiv && (
+                          <a 
+                            href={publication.data.arXiv}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex items-center gap-1 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors"
+                            onclick="event.stopPropagation()"
+                          >
+                            <Icon name="file-text" class="w-4 h-4" />
+                            arXiv
+                          </a>
+                        )}
                         {publication.data.demoUrl && (
-                          <span class="flex items-center gap-1">
+                          <a 
+                            href={publication.data.demoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex items-center gap-1 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors"
+                            onclick="event.stopPropagation()"
+                          >
                             <Icon name="external-link" class="w-4 h-4" />
                             website
-                          </span>
+                          </a>
                         )}
                         {publication.data.repositoryUrl && (
-                          <span class="flex items-center gap-1">
+                          <a 
+                            href={publication.data.repositoryUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="flex items-center gap-1 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors"
+                            onclick="event.stopPropagation()"
+                          >
                             <Icon name="github" class="w-4 h-4" />
                             code
-                          </span>
+                          </a>
                         )}
                       </div>
                     </div>

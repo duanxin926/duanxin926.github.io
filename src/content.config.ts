@@ -128,7 +128,9 @@ const publicationsCollection = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/publications' }),
   schema: z.object({
     title: z.string().default('Untitled Publication'),
-    description: z.string().nullable().optional().default('No description provided'),
+    authors: z.string().nullable().optional(), // Publication authors
+    venue: z.string().nullable().optional(), // Where it was published (e.g., "IROS 2025")
+    arXiv: z.string().url().nullable().optional(), // arXiv paper URL
     date: z.coerce.date().default(() => new Date()),
     categories: z.array(z.string()).nullable().optional().default([]),
     repositoryUrl: z.string().url().nullable().optional(),

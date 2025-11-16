@@ -1,11 +1,13 @@
 ---
 title: "Playful DoggyBot: Learning Agile and Precise Quadrupedal Locomotion"
-description: "Quadrupedal robot that can perform agile and playful tasks, including tracking and catching objects during high-dynamic locomotion."
+authors: "Xin Duan, Ziwen Zhuang, Hang Zhao, Sören Schwertfeger"
+venue: "IROS 2025"
 date: 2024-09-19
 categories:
   - Robotics
   - Reinforcement Learning
   - Quadruped
+arXiv: "https://arxiv.org/abs/2409.19920"
 demoUrl: "https://playful-doggybot.github.io/"
 repositoryUrl: "https://github.com/playful-doggybot/playful-doggybot"
 status: in-progress

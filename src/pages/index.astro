@@ -23,8 +23,8 @@ const processedPosts = await Promise.all(
   sortedPosts.map(async (post) => await processPost(post))
 ) as any[];
 
-// Get recent posts (no featured post, just show most recent)
-const recentPosts = processedPosts.slice(0, siteConfig.homeOptions.recentPosts.count);
+// Get recent posts (no featured post, just show most recent 3)
+const recentPosts = processedPosts.slice(0, 3);
 
 // Get featured projects if enabled
 let featuredProjects: any[] = [];
@@ -145,55 +145,85 @@ const structuredData = {
     <div class="mx-auto px-4 sm:px-6 lg:px-8" style={`max-width: ${siteConfig.layout.contentWidth}`}>
       <!-- Profile Section -->
       <section class="mb-16">
-        <div class="flex flex-col md:flex-row gap-8 items-start md:items-center">
-          <div class="flex-1">
-            <div class="text-3xl font-bold text-primary-900 dark:text-primary-50 mb-4">
-              Xin Duan 段欣
-            </div>
-            <div class="prose prose-sm dark:prose-dark max-w-none mb-4 text-lg">
-              <p>
-                I'm a student researcher at Shanghai Qi Zhi Institute, advised by
-                <a href="https://hangzhaomit.github.io/" class="text-highlight-600 dark:text-highlight-400 hover:underline">Hang Zhao</a>. I'm also a
-                third-year master's student in the
-                <a href="https://robotics.shanghaitech.edu.cn/" class="text-highlight-600 dark:text-highlight-400 hover:underline">MARS Lab</a>
-                , advised by
-                <a href="https://robotics.shanghaitech.edu.cn/" class="text-highlight-600 dark:text-highlight-400 hover:underline">Sören Schwertfeger</a>.
-                Before that, I completed my bachelor's degree in Computer
-                Science and Technology at ShanghaiTech University.
-              </p>
-              <p>My research interests are concentrated in Robot Learning.</p>
-            </div>
-          </div>
-          <div class="flex-shrink-0 self-start pt-12">
+        <div class="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-8">
+          <!-- Left Column: Photo and Social Icons -->
+          <div class="flex flex-col items-center gap-6">
+            <!-- Profile Photo -->
             <img
               src="/profile.jpg"
               alt="Xin Duan profile photo"
-              class="size-60 rounded-lg object-cover border-2 border-primary-200 dark:border-primary-700"
+              class="w-48 h-48 md:w-56 md:h-56 rounded-xl object-cover shadow-lg"
             />
+            
+            <!-- Social Links -->
+            <div class="flex flex-col items-stretch gap-3 w-full">
+              <a 
+                href="mailto:duanxin926@gmail.com"
+                class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 hover:bg-highlight-100 dark:hover:bg-highlight-900/40 hover:text-highlight-800 dark:hover:text-highlight-200 transition-all duration-200 hover:scale-105"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <span>Email</span>
+              </a>
+              
+              <a 
+                href="https://scholar.google.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 hover:bg-highlight-100 dark:hover:bg-highlight-900/40 hover:text-highlight-800 dark:hover:text-highlight-200 transition-all duration-200 hover:scale-105"
+              >
+                <Icon name="book-open" class="w-4 h-4" />
+                <span>Google Scholar</span>
+              </a>
+              
+              <a 
+                href="https://x.com/xinduan926"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 hover:bg-highlight-100 dark:hover:bg-highlight-900/40 hover:text-highlight-800 dark:hover:text-highlight-200 transition-all duration-200 hover:scale-105"
+              >
+                <Icon name="x-twitter" class="w-4 h-4" />
+                <span>X (former Twitter)</span>
+              </a>
+              
+              <a 
+                href="https://github.com/duanxin926"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 hover:bg-highlight-100 dark:hover:bg-highlight-900/40 hover:text-highlight-800 dark:hover:text-highlight-200 transition-all duration-200 hover:scale-105"
+              >
+                <Icon name="github" class="w-4 h-4" />
+                <span>GitHub</span>
+              </a>
+            </div>
           </div>
-        </div>
-        <div class="flex flex-wrap items-center gap-4 text-primary-600 dark:text-primary-400">
-          <a href="mailto:duanxin926@gmail.com" class="flex items-center gap-2 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-            </svg>
-            <span>Email</span>
-          </a>
-          <span class="text-primary-300 dark:text-primary-600">/</span>
-          <a href="https://scholar.google.com/" class="flex items-center gap-2 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors">
-            <Icon name="book-open" class="w-5 h-5" />
-            <span>Scholar</span>
-          </a>
-          <span class="text-primary-300 dark:text-primary-600">/</span>
-          <a href="https://x.com/xinduan926" class="flex items-center gap-2 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors">
-            <Icon name="x-twitter" class="w-5 h-5" />
-            <span>Twitter</span>
-          </a>
-          <span class="text-primary-300 dark:text-primary-600">/</span>
-          <a href="https://github.com/duanxin926" class="flex items-center gap-2 hover:text-highlight-600 dark:hover:text-highlight-400 transition-colors">
-            <Icon name="github" class="w-5 h-5" />
-            <span>Github</span>
-          </a>
+
+          <!-- Right Column: Name and Description in Light Box -->
+          <div class="bg-primary-50 dark:bg-primary-900/30 rounded-2xl p-8 border border-primary-200 dark:border-primary-700">
+            <!-- Name -->
+            <div class="mb-6">
+              <h1 class="text-2xl md:text-4xl font-bold text-primary-900 dark:text-primary-50 mb-2">
+                Xin Duan
+              </h1>
+              <p class="text-xl md:text-2xl text-primary-700 dark:text-primary-300">
+                段欣
+              </p>
+            </div>
+
+            <!-- Description -->
+            <div class="space-y-4 text-primary-800 dark:text-primary-200 text-l leading-relaxed">
+              <p>
+                I am a third-year Master's student in the <a href="https://robotics.shanghaitech.edu.cn/" class="text-highlight-600 dark:text-highlight-400 hover:underline font-medium">MARS Lab</a> at <span class="font-semibold text-primary-900 dark:text-primary-100">ShanghaiTech University</span>, advised by <a href="https://robotics.shanghaitech.edu.cn/" class="text-highlight-600 dark:text-highlight-400 hover:underline font-medium">Prof. Sören Schwertfeger</a>. My research is focused on <span class="font-semibold text-primary-900 dark:text-primary-100">Embodied AI</span>.
+              </p>
+              <p>
+                I also received my Bachelor's degree in Computer Science and Technology from ShanghaiTech.
+              </p>
+              <p>
+                Previously, I was a student researcher at the <span class="font-semibold text-primary-900 dark:text-primary-100">Shanghai Qi Zhi Institute</span> under the supervision of <a href="https://hangzhaomit.github.io/" class="text-highlight-600 dark:text-highlight-400 hover:underline font-medium">Prof. Hang Zhao</a> and an R&D intern at <a href="https://www.fftai.com/" class="text-highlight-600 dark:text-highlight-400 hover:underline font-medium">Fourier Intelligence</a>.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -331,9 +361,18 @@ const structuredData = {
       <!-- Recent Posts -->
       {siteConfig.homeOptions.recentPosts.enabled && recentPosts.length > 0 && (
         <section class="mb-16">
-          <h2 class="text-2xl font-semibold text-primary-900 dark:text-primary-50 mb-8">
-            Recent Posts
-          </h2>
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl font-semibold text-primary-900 dark:text-primary-50">
+              Recent Blogs
+            </h2>
+            <a
+              href="/posts"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-s font-medium rounded-full bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 hover:bg-highlight-100 dark:hover:bg-highlight-900/40 hover:text-highlight-800 dark:hover:text-highlight-200 transition-all duration-200 hover:scale-110"
+            >
+              <span>More</span>
+              <Icon name="arrow-right" class="w-5 h-5" />
+            </a>
+          </div>
           <div class="space-y-6">
             {recentPosts.map((post, index) => (
               <PostCard post={post} eager={index === 0} context="recent" />

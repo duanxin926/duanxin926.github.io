@@ -664,8 +664,23 @@ textarea {
 
 /* Ensure images in grids are properly sized */
 .prose .image-grid img {
-  aspect-ratio: 16/9; /* Maintain consistent aspect ratio */
   object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+/* Landscape images (wide) - e.g., 16:9, panorama */
+.prose .image-grid img.ratio-landscape {
+  aspect-ratio: 16/9;
+}
+
+/* Portrait images (tall) - e.g., 3:4, 9:16 */
+.prose .image-grid img.ratio-portrait {
+  aspect-ratio: 3/4;
+}
+
+/* Square or near-square images - e.g., 1:1, 4:5 */
+.prose .image-grid img.ratio-square {
+  aspect-ratio: 1/1;
 }
 
 /* Image gallery items and buttons */

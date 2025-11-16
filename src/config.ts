@@ -182,9 +182,9 @@ export const siteConfig: SiteConfig = {
   // [CONFIG:SITE_URL]
   site: "https://duanxin926.github.io",
   // [CONFIG:SITE_TITLE]
-  title: "Xin Duan",
+  title: "Xin Duan (段欣)",
   // [CONFIG:SITE_DESCRIPTION]
-  description: "Student researcher at Shanghai Qi Zhi Institute, interested in Robot Learning.",
+  description: "third-year Master student in ShanghaiTech University, interested in Embodied AI",
   // [CONFIG:SITE_AUTHOR]
   author: "Xin Duan",
   // [CONFIG:SITE_LANGUAGE]
@@ -196,7 +196,7 @@ export const siteConfig: SiteConfig = {
 
   // Global Settings
   // [CONFIG:THEME]
-  theme: "oxygen", // Available themes: "minimal" | "oxygen" | "atom" | "ayu" | "catppuccin" | "charcoal" | "dracula" | "everforest" | "flexoki" | "gruvbox" | "macos" | "nord" | "obsidian" | "rose-pine" | "sky" | "solarized" | "things" | "custom"
+  theme: "macos", // Available themes: "minimal" | "oxygen" | "atom" | "ayu" | "catppuccin" | "charcoal" | "dracula" | "everforest" | "flexoki" | "gruvbox" | "macos" | "nord" | "obsidian" | "rose-pine" | "sky" | "solarized" | "things" | "custom"
   // [CONFIG:CUSTOM_THEME_FILE]
   customThemeFile: "custom", // Only used if theme is set to "custom" above. Filename in src/themes/custom/ (without .ts extension)
   // [CONFIG:AVAILABLE_THEMES]
@@ -217,7 +217,7 @@ export const siteConfig: SiteConfig = {
   },
   layout: {
     // [CONFIG:LAYOUT_CONTENT_WIDTH]
-    contentWidth: "45rem",
+    contentWidth: "50rem",
   },
   tableOfContents: {
     // [CONFIG:TABLE_OF_CONTENTS_ENABLED]
@@ -310,11 +310,11 @@ export const siteConfig: SiteConfig = {
     showMobileMenu: true,
     // [CONFIG:NAVIGATION_PAGES]
     pages: [
-      { title: "Posts", url: "/posts" },
+      { title: "Pubs", url: "/publications" },
       { title: "Projects", url: "/projects" },
-      { title: "Docs", url: "/docs" },
+      { title: "Blogs", url: "/posts" },
       { title: "About", url: "/about" },
-      { title: "GitHub", url: "https://github.com/davidvkimball/astro-modular" },
+      { title: "GitHub", url: "https://github.com/duanxin926" },
     ],
     // [CONFIG:NAVIGATION_SOCIAL]
     social: [

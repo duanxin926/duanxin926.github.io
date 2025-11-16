@@ -9,6 +9,7 @@ const postsCollection = defineCollection({
     description: z.string().nullable().optional().default('No description provided'),
     date: z.coerce.date().default(() => new Date()),
     tags: z.array(z.string()).nullable().optional(),
+    categories: z.array(z.string()).nullable().optional().default([]),
     draft: z.boolean().optional(),
     image: z.any().nullable().optional().transform((val) => {
       // Handle various Obsidian syntax formats
@@ -161,6 +162,7 @@ const specialCollection = defineCollection({
     title: z.string().default('Untitled Page'),
     description: z.string().nullable().optional().default('No description provided'),
     hideTOC: z.boolean().optional(),
+    intro: z.string().nullable().optional(), // Introduction text for posts page (also used on homepage)
     // These pages have fixed URLs and special logic
     // URLs are determined by the file location, not frontmatter
   }),

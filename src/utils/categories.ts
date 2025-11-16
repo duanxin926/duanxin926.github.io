@@ -1,6 +1,16 @@
 import type { CollectionEntry } from 'astro:content';
 
 /**
+ * Check if any posts have categories
+ */
+export function hasPostCategories(posts: CollectionEntry<'posts'>[]): boolean {
+  return posts.some(post => 
+    post.data.categories && 
+    post.data.categories.length > 0
+  );
+}
+
+/**
  * Check if any projects have categories
  */
 export function hasProjectCategories(projects: CollectionEntry<'projects'>[]): boolean {
@@ -19,6 +29,25 @@ export function hasDocCategories(docs: CollectionEntry<'docs'>[]): boolean {
     doc.data.category.trim() !== '' &&
     doc.data.category !== 'General'
   );
+}
+
+/**
+ * Get all unique post categories
+ */
+export function getPostCategories(posts: CollectionEntry<'posts'>[]): string[] {
+  const categories = new Set<string>();
+  
+  posts.forEach(post => {
+    if (post.data.categories && post.data.categories.length > 0) {
+      post.data.categories.forEach(category => {
+        if (category && category.trim() !== '') {
+          categories.add(category.trim());
+        }
+      });
+    }
+  });
+  
+  return Array.from(categories).sort();
 }
 
 /**

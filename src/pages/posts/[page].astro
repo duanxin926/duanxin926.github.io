@@ -4,9 +4,11 @@ import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { generatePageSEO } from '@/utils/seo';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
+import { hasPostCategories, getPostCategories } from '@/utils/categories';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
 import Tags from '@/components/Tags.astro';
+import PostCategories from '@/components/PostCategories.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
 
@@ -54,27 +56,42 @@ const { posts, currentPage, totalPages, postsPerPage } = Astro.props;
 // Get query parameters
 const url = new URL(Astro.request.url);
 const selectedTag = url.searchParams.get('tag');
+const selectedCategory = url.searchParams.get('category');
 
-// Filter by tag if specified
-const filteredPosts = selectedTag
-  ? posts.filter(post => post.data.tags?.includes(selectedTag))
-  : posts;
+// Filter by tag and/or category if specified
+let filteredPosts = posts;
+if (selectedTag) {
+  filteredPosts = filteredPosts.filter(post => post.data.tags?.includes(selectedTag));
+}
+if (selectedCategory) {
+  filteredPosts = filteredPosts.filter(post => post.data.categories?.includes(selectedCategory));
+}
 
 // Calculate pagination for current page
 const startIndex = (currentPage - 1) * postsPerPage;
 const endIndex = Math.min(startIndex + postsPerPage, filteredPosts.length);
 const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
 
-// Extract all unique tags
+// Extract all unique tags and categories
 const allTags = extractTags(posts);
+const postsHaveCategories = hasPostCategories(posts);
+const allCategories = postsHaveCategories ? getPostCategories(posts) : [];
 
 // Generate SEO data
-const pageTitle = selectedTag
-  ? `Posts tagged "${selectedTag}" - Page ${currentPage}`
-  : `All Posts - Page ${currentPage}`;
-const pageDescription = selectedTag
-  ? `Page ${currentPage} of posts tagged with "${selectedTag}"`
-  : `Page ${currentPage} of all posts on ${siteConfig.title}`;
+const pageTitle = selectedCategory && selectedTag
+  ? `分类：${selectedCategory}，标签：${selectedTag} - 第 ${currentPage} 页`
+  : selectedCategory
+  ? `分类：${selectedCategory} - 第 ${currentPage} 页`
+  : selectedTag
+  ? `标签：${selectedTag} - 第 ${currentPage} 页`
+  : `所有文章 - 第 ${currentPage} 页`;
+const pageDescription = selectedCategory && selectedTag
+  ? `第 ${currentPage} 页，分类为 "${selectedCategory}" 且标签为 "${selectedTag}" 的文章`
+  : selectedCategory
+  ? `第 ${currentPage} 页，分类为 "${selectedCategory}" 的文章`
+  : selectedTag
+  ? `第 ${currentPage} 页，标签为 "${selectedTag}" 的文章`
+  : `${siteConfig.title} 的所有文章，第 ${currentPage} 页`;
 
 const seoData = {
   title: `${pageTitle} | ${siteConfig.title}`,
@@ -192,6 +209,10 @@ const pagination = {
 
         <!-- Mobile sidebar - appears below content on mobile/tablet -->
         <div class="xl:hidden mt-12 space-y-6">
+          <!-- Categories -->
+          {siteConfig.postOptions.tags && postsHaveCategories && allCategories.length > 0 && (
+            <PostCategories categories={allCategories} currentCategory={selectedCategory} />
+          )}
           <!-- Tags -->
           {siteConfig.postOptions.tags && allTags.length > 0 && (
             <Tags tags={allTags} currentTag={selectedTag} />
@@ -201,6 +222,10 @@ const pagination = {
         <!-- Desktop sidebar - floats to the right of the content container -->
         <div class="hidden xl:block absolute top-0 left-full ml-8 w-64">
           <div class="sticky top-24 space-y-3 max-h-[calc(100vh-12rem)] overflow-y-auto pb-6">
+            <!-- Categories -->
+            {siteConfig.postOptions.tags && postsHaveCategories && allCategories.length > 0 && (
+              <PostCategories categories={allCategories} currentCategory={selectedCategory} />
+            )}
             <!-- Tags -->
             {siteConfig.postOptions.tags && allTags.length > 0 && (
               <Tags tags={allTags} currentTag={selectedTag} />

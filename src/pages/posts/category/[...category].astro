@@ -3,9 +3,11 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
+import { hasPostCategories, getPostCategories } from '@/utils/categories';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
 import Tags from '@/components/Tags.astro';
+import PostCategories from '@/components/PostCategories.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
 
@@ -18,16 +20,21 @@ export const getStaticPaths: GetStaticPaths = async () => {
     const visiblePosts = allPosts.filter(post => shouldShowPost(post, isDev));
     const sortedPosts = sortPostsByDate(visiblePosts);
 
-    // Extract all unique tags with error handling
-    const allTags = extractTags(sortedPosts);
+    // Extract all unique categories with error handling
+    const postsHaveCategories = hasPostCategories(sortedPosts);
+    const allCategories = postsHaveCategories ? getPostCategories(sortedPosts) : [];
 
-    if (isDev && allTags.length === 0) {
+    if (isDev && allCategories.length === 0) {
     }
 
-    // Generate paths for each tag
-    return allTags.map(tag => ({
-      params: { tag: tag },
-      props: { tag, allPosts: sortedPosts, allTags }
+    // Extract all tags for sidebar
+    const allTags = extractTags(sortedPosts);
+
+    // Generate paths for each category
+    // For catch-all routes, pass as string in params
+    return allCategories.map(category => ({
+      params: { category: category },
+      props: { allPosts: sortedPosts, allCategories, allTags }
     }));
   } catch (error) {
     if (isDev) {
@@ -36,15 +43,28 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 };
 
-const { tag, allPosts, allTags } = Astro.props as {
-  tag: string;
+const { allPosts, allCategories, allTags } = Astro.props as {
   allPosts: any[];
+  allCategories: string[];
   allTags: string[];
 };
 const isDev = import.meta.env.DEV;
 
-// Validate tag parameter
-if (!tag || typeof tag !== 'string') {
+// Get category from route params (catch-all route returns array or string)
+const categoryParam = Astro.params.category;
+let category: string;
+if (Array.isArray(categoryParam)) {
+  category = categoryParam.join('/');
+} else if (typeof categoryParam === 'string') {
+  category = categoryParam;
+} else if (typeof categoryParam === 'number') {
+  category = categoryParam.toString();
+} else {
+  category = '';
+}
+
+// Validate category parameter
+if (!category || category.trim() === '') {
   if (isDev) {
   }
   // Return 404 or redirect in production, show error in dev
@@ -53,16 +73,19 @@ if (!tag || typeof tag !== 'string') {
   }
 }
 
-// Filter posts by the current tag with error handling
+// Trim the category
+category = category.trim();
+
+// Filter posts by the current category with error handling
 let filteredPosts: any[] = [];
 try {
   filteredPosts = allPosts.filter((post: any) => {
-    if (!post.data.tags) return false;
+    if (!post.data.categories) return false;
     
-    // Handle both string and array tags
-    const postTags = Array.isArray(post.data.tags) ? post.data.tags : [post.data.tags];
-    return postTags.some((postTag: any) => 
-      postTag && typeof postTag === 'string' && postTag.trim() === tag.trim()
+    // Handle both string and array categories
+    const postCategories = Array.isArray(post.data.categories) ? post.data.categories : [post.data.categories];
+    return postCategories.some((postCategory: any) => 
+      postCategory && typeof postCategory === 'string' && postCategory.trim() === category.trim()
     );
   });
 } catch (error) {
@@ -81,8 +104,8 @@ const endIndex = Math.min(postsPerPage, totalPosts);
 const paginatedPosts = filteredPosts.slice(startIndex, endIndex);
 
 // Generate SEO data
-const pageTitle = `Posts tagged "${tag}"`;
-const pageDescription = `All posts tagged with "${tag}"`;
+const pageTitle = `分类：${category}`;
+const pageDescription = `所有分类为 "${category}" 的文章`;
 
 const seoData = {
   title: `${pageTitle} | ${siteConfig.title}`,
@@ -92,7 +115,7 @@ const seoData = {
 };
 
 // Pagination info
-const baseUrl = `/posts/tag/${encodeURIComponent(tag)}`;
+const baseUrl = `/posts/category/${encodeURIComponent(category)}`;
 const pagination = {
   currentPage,
   totalPages,
@@ -134,9 +157,9 @@ const pagination = {
           </div>
         </div>
         <p class="text-base text-primary-600 dark:text-primary-300">
-          显示<strong>{filteredPosts.length}</strong> 篇笔记，标签为
+          显示 <strong>{filteredPosts.length}</strong> 篇文章，分类为
           <span class="inline-flex items-center px-2 py-1 bg-highlight-100 dark:bg-highlight-900/30 text-highlight-800 dark:text-highlight-200 rounded text-sm font-medium ml-1">
-            #{tag}
+            {category}
           </span>
         </p>
 
@@ -167,15 +190,15 @@ const pagination = {
               <Pagination pagination={pagination} baseUrl={baseUrl} />
             </>
           ) : (
-            <!-- No posts for selected tag -->
+            <!-- No posts for selected category -->
             <div class="text-center py-16">
-              <Icon name="tag" class="w-16 h-16 text-primary-400 dark:text-primary-500 mx-auto mb-6" />
+              <Icon name="folder-open" class="w-16 h-16 text-primary-400 dark:text-primary-500 mx-auto mb-6" />
               <h2 class="text-2xl font-semibold text-primary-900 dark:text-primary-50 mb-4">
-                No posts found
+                未找到文章
               </h2>
               <p class="text-primary-600 dark:text-primary-300 mb-8 max-w-md mx-auto">
-                There are no posts tagged with "{tag}". Try browsing other tags or 
-                <a href="/posts" class="text-primary-600 dark:text-primary-300 hover:underline">view all posts</a>.
+                没有分类为 "{category}" 的文章。试试浏览其他分类或
+                <a href="/posts" class="text-primary-600 dark:text-primary-300 hover:underline">查看所有文章</a>。
               </p>
             </div>
           )}
@@ -183,18 +206,26 @@ const pagination = {
 
         <!-- Mobile sidebar - appears below content on mobile/tablet -->
         <div class="xl:hidden mt-12 space-y-6">
+          <!-- Categories -->
+          {siteConfig.postOptions.tags && allCategories.length > 0 && (
+            <PostCategories categories={allCategories} currentCategory={category} />
+          )}
           <!-- Tags -->
           {siteConfig.postOptions.tags && allTags.length > 0 && (
-            <Tags tags={allTags} currentTag={tag} />
+            <Tags tags={allTags} />
           )}
         </div>
 
         <!-- Desktop sidebar - floats to the right of the content container -->
         <div class="hidden xl:block absolute top-0 left-full ml-8 w-64">
           <div class="sticky top-24 space-y-3 max-h-[calc(100vh-12rem)] overflow-y-auto pb-6">
+            <!-- Categories -->
+            {siteConfig.postOptions.tags && allCategories.length > 0 && (
+              <PostCategories categories={allCategories} currentCategory={category} />
+            )}
             <!-- Tags -->
             {siteConfig.postOptions.tags && allTags.length > 0 && (
-              <Tags tags={allTags} currentTag={tag} />
+              <Tags tags={allTags} />
             )}
           </div>
         </div>
@@ -216,8 +247,9 @@ const pagination = {
     }
   }
 
-  /* Tag highlight in header */
-  .tag-highlight {
+  /* Category highlight in header */
+  .category-highlight {
     @apply bg-gradient-to-r from-highlight-500 to-highlight-600 text-white;
   }
 </style>
+

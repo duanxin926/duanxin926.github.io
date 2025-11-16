@@ -13,6 +13,15 @@ import { optimizeContentImagePath } from '@/utils/images';
 
 const isDev = import.meta.env.DEV;
 
+// Get posts page intro text from special collection
+let postsPageContent: CollectionEntry<'special'>[] = [];
+try {
+  postsPageContent = await getCollection('special', ({ id }) => id === 'posts');
+} catch (error) {
+  postsPageContent = [];
+}
+const postsPageData = postsPageContent.length > 0 ? postsPageContent[0] : null;
+
 // Get all posts and filter by visibility
 const allPosts = await getCollection('posts');
 const visiblePosts = allPosts.filter(post => shouldShowPost(post, isDev));
@@ -361,7 +370,7 @@ const structuredData = {
       <!-- Recent Posts -->
       {siteConfig.homeOptions.recentPosts.enabled && recentPosts.length > 0 && (
         <section class="mb-16">
-          <div class="flex items-center justify-between mb-8">
+          <div class="flex items-center justify-between mb-4">
             <h2 class="text-2xl font-semibold text-primary-900 dark:text-primary-50">
               Recent Blogs
             </h2>
@@ -373,6 +382,11 @@ const structuredData = {
               <Icon name="arrow-right" class="w-5 h-5" />
             </a>
           </div>
+          {postsPageData?.data.intro && (
+            <p class="text-base text-primary-600 dark:text-primary-300 mb-8">
+              {postsPageData.data.intro}
+            </p>
+          )}
           <div class="space-y-6">
             {recentPosts.map((post, index) => (
               <PostCard post={post} eager={index === 0} context="recent" />

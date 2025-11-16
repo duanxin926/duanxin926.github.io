@@ -13,6 +13,9 @@ hideTOC: false
 draft: false
 featured: true
 ---
+
+This is an project about bimanual dexterous manipulation on Fourier GR1/2 humanoid robots.
+
 ## Project Overview
 
 - Enhanced the generalization of object positions in dual-arm dexterous humanoid robots Fourier gr1/2.

@@ -6,10 +6,26 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+  text-autospace: normal;
+}
 /* KaTeX Theme Integration */
 .katex {
   font-size: 1.1em;
   color: rgb(var(--color-foreground));
+}
+
+/* Enhanced inline math styling */
+.prose .katex:not(.katex-display .katex) {
+  padding: 0 0.2em;
+  margin: 0 0.1em;
+  vertical-align: baseline;
+  line-height: 1.5;
+}
+
+/* Better spacing for inline math in paragraphs */
+.prose p .katex:not(.katex-display .katex) {
+  margin: 0 0.15em;
 }
 
 /* Fix KaTeX SVG sizing issues - constrain the problematic 400em width */
@@ -50,11 +66,18 @@
 
 
 .katex-display {
-  margin: 1.5rem 0;
+  margin: 1rem 0;
   text-align: center;
   overflow-x: auto;
   overflow-y: hidden;
   display: block;
+  padding: 0.5rem 0;
+}
+
+/* Enhanced spacing around display math blocks - reduced spacing */
+.prose p:has(.katex-display) {
+  margin: 1rem 0;
+  padding: 0.25rem 0;
 }
 
 /* Ensure display math is properly centered and separated */
@@ -65,15 +88,15 @@
   text-align: initial;
 }
 
-/* Ensure display math blocks are properly separated */
+/* Ensure display math blocks are properly separated - reduced spacing */
 p:has(.katex-display) {
   text-align: center;
-  margin: 1.5rem 0;
+  margin: 1rem 0;
 }
 
-/* Handle multiple display math blocks */
+/* Handle multiple display math blocks - reduced spacing */
 .katex-display + .katex-display {
-  margin-top: 1.5rem;
+  margin-top: 0.75rem;
 }
 
 /* KaTeX in dark mode */
@@ -720,9 +743,38 @@ textarea {
 
 /* Prose Styles */
 .prose {
-  @apply text-primary-700 dark:text-primary-300;
+  @apply text-black dark:text-primary-300;
   font-family: var(--font-prose, 'Inter'), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-display: var(--font-display, swap);
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+/* Enhanced paragraph spacing for better readability */
+.prose p {
+  @apply my-4;
+  line-height: 1.8;
+}
+
+/* Better spacing for paragraphs with math */
+.prose p:has(.katex) {
+  @apply my-3;
+}
+
+/* Improved list spacing */
+.prose ul, .prose ol {
+  @apply my-4;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  @apply my-2;
+  line-height: 1.75;
+}
+
+/* Better spacing for list items with math - reduced spacing */
+.prose li:has(.katex) {
+  @apply my-3;
 }
 
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
@@ -757,7 +809,9 @@ textarea {
 
 
 .prose strong {
-  @apply text-primary-900 dark:text-primary-200 font-semibold;
+  @apply text-highlight-600 dark:text-highlight-400 font-semibold;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .prose blockquote {
@@ -772,11 +826,12 @@ textarea {
   @apply bg-highlight-100 dark:bg-highlight-900/30 text-highlight-800 dark:text-highlight-200 px-1 py-0.5 rounded;
 }
 
-/* Lists */
-.prose ul, .prose ol { @apply my-1; }
-.prose li { @apply my-0; }
-.prose li > p { @apply my-0; }
-.prose ul > li, .prose ol > li { @apply pl-1; }
+/* Lists - Enhanced spacing already defined above */
+.prose li > p { @apply my-2; }
+.prose ul > li, .prose ol > li { 
+  @apply pl-1;
+  list-style-position: outside;
+}
 
 .prose ul li input[type="checkbox"] { @apply mr-2; }
 

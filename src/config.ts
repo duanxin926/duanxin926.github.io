@@ -229,7 +229,7 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:FOOTER_ENABLED]
     enabled: true,
     // [CONFIG:FOOTER_CONTENT]
-    content: `© 2025 {author}. Built with the <a href="https://github.com/davidvkimball/astro-modular" target="_blank">Astro Modular</a> theme.`,
+    content: `© 2025 {author}.`,
     // [CONFIG:FOOTER_SHOW_SOCIAL_ICONS]
     showSocialIconsInFooter: true,
   },
@@ -310,11 +310,12 @@ export const siteConfig: SiteConfig = {
     showMobileMenu: true,
     // [CONFIG:NAVIGATION_PAGES]
     pages: [
+      { title: "Home", url: "/" },
       { title: "Pubs", url: "/publications" },
       { title: "Projects", url: "/projects" },
       { title: "Blogs", url: "/posts" },
       { title: "About", url: "/about" },
-      { title: "GitHub", url: "https://github.com/duanxin926" },
+      // { title: "GitHub", url: "https://github.com/duanxin926" },
     ],
     // [CONFIG:NAVIGATION_SOCIAL]
     social: [

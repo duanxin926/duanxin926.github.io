@@ -57,76 +57,120 @@ const projectUrl = project.data.projectUrl;
 // Determine if we should show the cover image
 // Projects should always show images when available (not controlled by postOptions)
 const shouldShowCoverImage = true;
+
+// Check if the image is actually a video file
+const isVideo = image && typeof image === 'string' && /\.(mp4|webm|mov|avi|mkv|ogv)$/i.test(image);
 ---
 
 <div class="group relative bg-white dark:bg-primary-800 rounded-xl border border-primary-200 dark:border-primary-700 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 aspect-[4/3]" data-project-categories={categories.join(',')}>
   <a href={`/projects/${project.id}`} class="block h-full" aria-label={`View project: ${title}`}>
-    <!-- Background Image or Fallback -->
+    <!-- Background Video or Image -->
     {image && shouldShowCoverImage && (
       <div class="absolute inset-0">
-        <ImageWrapper
-          src={(() => {
-            // Clean the image path by removing Obsidian brackets
-            let cleanImagePath = image;
-            if (!cleanImagePath || typeof cleanImagePath !== 'string') return '';
-            if (cleanImagePath.startsWith('[[') && cleanImagePath.endsWith(']]')) {
-              cleanImagePath = cleanImagePath.slice(2, -2);
-            }
-
-            // Remove Obsidian subfolder prefixes (images/, attachments/)
-            if (typeof cleanImagePath === 'string') {
-              // Remove images/ prefix if present (Obsidian subfolder setting)
-              if (cleanImagePath.startsWith('images/')) {
-                cleanImagePath = cleanImagePath.replace('images/', '');
+        {isVideo ? (
+          <!-- Video Background -->
+          <video
+            src={(() => {
+              // Clean the video path by removing Obsidian brackets
+              let cleanVideoPath = image;
+              if (cleanVideoPath.startsWith('[[') && cleanVideoPath.endsWith(']]')) {
+                cleanVideoPath = cleanVideoPath.slice(2, -2);
               }
-              // Remove attachments/ prefix - basePath will add it back
-              if (cleanImagePath.startsWith('attachments/')) {
-                cleanImagePath = cleanImagePath.replace('attachments/', '');
+
+              // Remove Obsidian subfolder prefixes
+              if (cleanVideoPath.startsWith('images/')) {
+                cleanVideoPath = cleanVideoPath.replace('images/', '');
               }
-            }
+              if (cleanVideoPath.startsWith('attachments/')) {
+                cleanVideoPath = cleanVideoPath.replace('attachments/', '');
+              }
 
-            const finalSrc = cleanImagePath || '';
-            // Convert to WebP if applicable (sync-images.js creates WebP versions)
-            return getOptimizedFormat(finalSrc);
-          })()}
-          basePath={(() => {
-            // 1. External URLs - no basePath needed
-            if (typeof image === 'string' && image.startsWith('http')) {
-              return '';
-            }
+              // Determine base path
+              let basePath = '';
+              if (typeof image === 'string' && !image.startsWith('http')) {
+                if (image.includes('attachments/')) {
+                  basePath = '/projects/attachments/';
+                } else if (project.id) {
+                  basePath = `/projects/${project.id}/`;
+                } else {
+                  basePath = '/projects/attachments/';
+                }
+              }
 
-            // 2. Clean the image path to check for attachments/ prefix
-            let cleanImagePath = image;
-            if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('[[') && cleanImagePath.endsWith(']]')) {
-              cleanImagePath = cleanImagePath.slice(2, -2);
-            }
+              return `${basePath}${cleanVideoPath}`;
+            })()}
+            autoplay
+            loop
+            muted
+            playsinline
+            class="w-full h-full object-cover"
+          />
+        ) : (
+          <!-- Image Background -->
+          <ImageWrapper
+            src={(() => {
+              // Clean the image path by removing Obsidian brackets
+              let cleanImagePath = image;
+              if (!cleanImagePath || typeof cleanImagePath !== 'string') return '';
+              if (cleanImagePath.startsWith('[[') && cleanImagePath.endsWith(']]')) {
+                cleanImagePath = cleanImagePath.slice(2, -2);
+              }
 
-            // 3. Detect folder-based vs file-based: if image path starts with 'attachments/',
-            // it's a single-file project (shared attachments folder)
-            if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('attachments/')) {
-              // Single-file project with image in attachments folder
-              // The sync script copies these to /projects/attachments/
-              return "/projects/attachments/";
-            }
+              // Remove Obsidian subfolder prefixes (images/, attachments/)
+              if (typeof cleanImagePath === 'string') {
+                // Remove images/ prefix if present (Obsidian subfolder setting)
+                if (cleanImagePath.startsWith('images/')) {
+                  cleanImagePath = cleanImagePath.replace('images/', '');
+                }
+                // Remove attachments/ prefix - basePath will add it back
+                if (cleanImagePath.startsWith('attachments/')) {
+                  cleanImagePath = cleanImagePath.replace('attachments/', '');
+                }
+              }
 
-            // 4. Folder-based project - sync script copies images to project folder root
-            // Safety check: ensure project.id exists before using it
-            if (project.id) {
-              return `/projects/${project.id}/`;
-            } else {
-              // Fallback to attachments directory if project.id is undefined
-              return '/projects/attachments/';
-            }
-          })()}
-          alt={imageAlt || `Cover image for project: ${title}`}
-          width={800}
-          height={600}
-          loading={eager ? 'eager' : 'lazy'}
-          fetchpriority={eager ? 'high' : 'auto'}
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        />
+              const finalSrc = cleanImagePath || '';
+              // Convert to WebP if applicable (sync-images.js creates WebP versions)
+              return getOptimizedFormat(finalSrc);
+            })()}
+            basePath={(() => {
+              // 1. External URLs - no basePath needed
+              if (typeof image === 'string' && image.startsWith('http')) {
+                return '';
+              }
+
+              // 2. Clean the image path to check for attachments/ prefix
+              let cleanImagePath = image;
+              if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('[[') && cleanImagePath.endsWith(']]')) {
+                cleanImagePath = cleanImagePath.slice(2, -2);
+              }
+
+              // 3. Detect folder-based vs file-based: if image path starts with 'attachments/',
+              // it's a single-file project (shared attachments folder)
+              if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('attachments/')) {
+                // Single-file project with image in attachments folder
+                // The sync script copies these to /projects/attachments/
+                return "/projects/attachments/";
+              }
+
+              // 4. Folder-based project - sync script copies images to project folder root
+              // Safety check: ensure project.id exists before using it
+              if (project.id) {
+                return `/projects/${project.id}/`;
+              } else {
+                // Fallback to attachments directory if project.id is undefined
+                return '/projects/attachments/';
+              }
+            })()}
+            alt={imageAlt || `Cover image for project: ${title}`}
+            width={800}
+            height={600}
+            loading={eager ? 'eager' : 'lazy'}
+            fetchpriority={eager ? 'high' : 'auto'}
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        )}
         <!-- Dark overlay for better text readability -->
-        <div class="absolute inset-0 bg-black/70 group-hover:bg-black/80 transition-colors duration-300"></div>
+        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300"></div>
       </div>
     )}
 

@@ -99,6 +99,13 @@ const toc = shouldShowTOC ? await generateTOC(headings) : [];
 
 // Get adjacent projects for navigation
 const { prev: prevProject, next: nextProject } = getAdjacentPosts(visibleProjectsForCategories as any, project.id);
+
+// Check if the image is actually a video file
+const rawImageForCheck = Array.isArray(project.data.image) ? project.data.image[0] : project.data.image;
+const cleanImageForCheck = typeof rawImageForCheck === 'string' && rawImageForCheck.startsWith('[[') && rawImageForCheck.endsWith(']]') 
+  ? rawImageForCheck.slice(2, -2) 
+  : rawImageForCheck;
+const isVideo = cleanImageForCheck && typeof cleanImageForCheck === 'string' && /\.(mp4|webm|mov|avi|mkv|ogv)$/i.test(cleanImageForCheck);
 ---
 
 <BaseLayout seoData={seoData}>
@@ -106,9 +113,9 @@ const { prev: prevProject, next: nextProject } = getAdjacentPosts(visibleProject
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 
-    <!-- Preload project cover image - only for projects that will definitely show the image immediately -->
+    <!-- Preload project cover image - only for images (not videos) that will show immediately -->
     {(() => {
-      if (!project.data.image || project.data.hideCoverImage === true) return false;
+      if (!project.data.image || project.data.hideCoverImage === true || isVideo) return false;
 
       // Projects always show images when available, so always preload
       const shouldPreload = true;
@@ -133,72 +140,80 @@ const { prev: prevProject, next: nextProject } = getAdjacentPosts(visibleProject
     <div class="mx-auto px-4 sm:px-6 lg:px-8 relative" style={`max-width: ${siteConfig.layout.contentWidth}`}>
       <!-- Main content -->
       <article class={`bg-primary-50 dark:bg-primary-900 rounded-lg border border-primary-200 dark:border-primary-700 shadow-sm ${project.data.image && project.data.hideCoverImage !== true ? 'overflow-hidden' : ''}`}>
-        {/* Cover image */}
+        {/* Cover image or video */}
         {project.data.image && project.data.hideCoverImage !== true && (() => {
-          // Process image path similar to ProjectCard
+          // Process image/video path similar to ProjectCard
           let rawImage = project.data.image;
           if (Array.isArray(rawImage)) {
             rawImage = rawImage[0];
           }
           
           // Clean Obsidian brackets
-          let cleanImagePath = typeof rawImage === 'string' ? rawImage : '';
-          if (cleanImagePath.startsWith('[[') && cleanImagePath.endsWith(']]')) {
-            cleanImagePath = cleanImagePath.slice(2, -2);
+          let cleanMediaPath = typeof rawImage === 'string' ? rawImage : '';
+          if (cleanMediaPath.startsWith('[[') && cleanMediaPath.endsWith(']]')) {
+            cleanMediaPath = cleanMediaPath.slice(2, -2);
           }
           
-          // Determine src and basePath for ImageWrapper
-          let imageSrc = cleanImagePath;
-          let imageBasePath = '';
+          // Determine src and basePath
+          let mediaSrc = cleanMediaPath;
+          let mediaBasePath = '';
           
-          if (typeof cleanImagePath === 'string' && cleanImagePath.startsWith('http')) {
+          if (typeof cleanMediaPath === 'string' && cleanMediaPath.startsWith('http')) {
             // External URL - pass as-is
-            imageSrc = cleanImagePath;
-            imageBasePath = '';
+            mediaSrc = cleanMediaPath;
+            mediaBasePath = '';
           } else {
-            // Detect folder-based vs file-based: if image path starts with 'attachments/',
+            // Detect folder-based vs file-based: if path starts with 'attachments/',
             // it's a single-file project (shared attachments folder)
-            const isFileBased = typeof cleanImagePath === 'string' && cleanImagePath.startsWith('attachments/');
+            const isFileBased = typeof cleanMediaPath === 'string' && cleanMediaPath.startsWith('attachments/');
             
             if (isFileBased) {
               // Single-file project - remove attachments/ prefix
-              imageSrc = cleanImagePath.replace('attachments/', '');
-              imageBasePath = '/projects/attachments/';
+              mediaSrc = cleanMediaPath.replace('attachments/', '');
+              mediaBasePath = '/projects/attachments/';
             } else {
-              // Folder-based project - sync script copies images to project folder root
+              // Folder-based project - sync script copies files to project folder root
               // Remove 'images/' or 'attachments/' prefixes if present (sync script removes them)
-              if (cleanImagePath.startsWith('images/') || cleanImagePath.startsWith('attachments/')) {
-                imageSrc = cleanImagePath.replace(/^(images|attachments)\//, '');
+              if (cleanMediaPath.startsWith('images/') || cleanMediaPath.startsWith('attachments/')) {
+                mediaSrc = cleanMediaPath.replace(/^(images|attachments)\//, '');
               } else {
-                imageSrc = cleanImagePath;
+                mediaSrc = cleanMediaPath;
               }
               // Safety check: ensure project.id exists before using it
               if (project.id) {
-                imageBasePath = `/projects/${project.id}/`;
+                mediaBasePath = `/projects/${project.id}/`;
               } else {
                 // Fallback to attachments directory if project.id is undefined
-                imageBasePath = '/projects/attachments/';
+                mediaBasePath = '/projects/attachments/';
               }
             }
           }
           
-          // Convert to WebP if applicable (sync-images.js creates WebP versions)
-          imageSrc = getOptimizedFormat(imageSrc);
-          
           return (
-            <div class="h-40 sm:h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-lg bg-primary-100 dark:bg-primary-800">
-              <ImageWrapper
-                src={imageSrc}
-                basePath={imageBasePath}
-                alt={project.data.imageAlt || `Featured image for project: ${project.data.title}`}
-                class="w-full h-full"
-                width={800}
-                height={450}
-                format="webp"
-                quality={85}
-                loading="eager"
-                fetchpriority="high"
-              />
+            <div class={`overflow-hidden rounded-t-lg bg-primary-100 dark:bg-primary-800 ${isVideo ? '' : 'h-40 sm:h-48 md:h-56 lg:h-64'}`}>
+              {isVideo ? (
+                <video
+                  src={`${mediaBasePath}${mediaSrc}`}
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  class="w-full h-auto max-h-[500px] object-contain"
+                />
+              ) : (
+                <ImageWrapper
+                  src={getOptimizedFormat(mediaSrc)}
+                  basePath={mediaBasePath}
+                  alt={project.data.imageAlt || `Featured image for project: ${project.data.title}`}
+                  class="w-full h-full"
+                  width={800}
+                  height={450}
+                  format="webp"
+                  quality={85}
+                  loading="eager"
+                  fetchpriority="high"
+                />
+              )}
             </div>
           );
         })()}
@@ -446,7 +461,7 @@ const { prev: prevProject, next: nextProject } = getAdjacentPosts(visibleProject
               .replace(/^-+|-+$/g, '');
 
             // Helper function to create slug from title (same as resolveWikilink logic)
-            const createSlugFromTitle = (title: string) => {
+            const createSlugFromTitle = (title) => {
               return title.toLowerCase()
                 .replace(/[^a-z0-9\s-]/g, '')
                 .replace(/\s+/g, '-')

@@ -13,13 +13,6 @@
       "title": "策略梯度定理推导",
       "slug": "policy-gradient-proof",
       "connections": 0
-    },
-    {
-      "id": "rainbow-headings",
-      "type": "post",
-      "title": "地球色调标题测试",
-      "slug": "rainbow-headings",
-      "connections": 0
     }
   ],
   "connections": [
@@ -30,9 +23,9 @@
     }
   ],
   "metadata": {
-    "totalPosts": 3,
+    "totalPosts": 2,
     "totalConnections": 1,
     "maxNodesApplied": false,
-    "originalNodeCount": 3
+    "originalNodeCount": 2
   }
 }

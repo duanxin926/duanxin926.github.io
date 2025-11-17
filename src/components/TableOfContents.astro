@@ -180,11 +180,33 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= maxDept
   }
   
   .toc-nav {
-    /* No height restrictions - let it flow naturally */
+    /* Container for scrollable TOC content */
   }
   
   .toc-content {
-    /* No scrolling needed - content flows naturally */
+    /* Enable scrolling for long TOC content */
+    max-height: 40vh;
+    overflow-y: scroll; /* Always show scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--color-primary-400)) transparent;
+  }
+
+  /* Custom scrollbar for webkit browsers */
+  .toc-content::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .toc-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .toc-content::-webkit-scrollbar-thumb {
+    background: rgb(var(--color-primary-400));
+    border-radius: 1px;
+  }
+
+  .toc-content::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--color-primary-500));
   }
   
   /* Desktop TOC in grid layout - matches LocalGraph width */
@@ -203,7 +225,6 @@ const filteredHeadings = headings.filter(h => h.depth >= 2 && h.depth <= maxDept
     }
   }
   
-  /* No scrollbar needed - content flows naturally */
   
   .toc-chevron {
     @apply transition-transform duration-200;

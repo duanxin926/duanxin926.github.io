@@ -17,8 +17,8 @@ body{
 
 /* Enhanced inline math styling */
 .prose .katex:not(.katex-display .katex) {
-  padding: 0 0.2em;
-  margin: 0 0.1em;
+  padding: 0 0.1em;
+  margin: 0 0.05em;
   vertical-align: baseline;
   line-height: 2.2;
 }

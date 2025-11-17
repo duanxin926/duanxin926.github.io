@@ -74,34 +74,34 @@ export async function GET() {
         enclosure:
           post.data.image && post.data.imageOG
             ? {
-                url: (() => {
-                  const imagePath = extractImagePath(post.data.image);
-                  if (typeof imagePath === "string" && imagePath.startsWith("http")) {
-                    return imagePath;
-                  }
-                  // Use optimizePostImagePath to handle folder-based posts and WebP conversion
-                  const optimizedPath = optimizePostImagePath(imagePath, (post as any).id, (post as any).id);
-                  // optimizedPath always starts with /, so remove it since siteUrl already ends with /
-                  return `${siteUrl}${optimizedPath.startsWith('/') ? optimizedPath.slice(1) : optimizedPath}`;
-                })(),
-                type: getMimeTypeFromPath(extractImagePath(post.data.image)),
-                length: 0, // Length is optional
-              }
+              url: (() => {
+                const imagePath = extractImagePath(post.data.image);
+                if (typeof imagePath === "string" && imagePath.startsWith("http")) {
+                  return imagePath;
+                }
+                // Use optimizePostImagePath to handle folder-based posts and WebP conversion
+                const optimizedPath = optimizePostImagePath(imagePath, (post as any).id, (post as any).id);
+                // optimizedPath always starts with /, so remove it since siteUrl already ends with /
+                return `${siteUrl}${optimizedPath.startsWith('/') ? optimizedPath.slice(1) : optimizedPath}`;
+              })(),
+              type: getMimeTypeFromPath(extractImagePath(post.data.image)),
+              length: 0, // Length is optional
+            }
             : undefined,
         customData: [
           post.data.targetKeyword &&
-            `<keyword>${post.data.targetKeyword}</keyword>`,
+          `<keyword>${post.data.targetKeyword}</keyword>`,
           post.data.image &&
-            `<image>${(() => {
-              const imagePath = extractImagePath(post.data.image);
-              if (typeof imagePath === "string" && imagePath.startsWith("http")) {
-                return imagePath;
-              }
-              // Use optimizePostImagePath to handle folder-based posts and WebP conversion
-              const optimizedPath = optimizePostImagePath(imagePath, (post as any).id, (post as any).id);
-              // optimizedPath always starts with /, so remove it since siteUrl already ends with /
-              return `${siteUrl}${optimizedPath.startsWith('/') ? optimizedPath.slice(1) : optimizedPath}`;
-            })()}</image>`,
+          `<image>${(() => {
+            const imagePath = extractImagePath(post.data.image);
+            if (typeof imagePath === "string" && imagePath.startsWith("http")) {
+              return imagePath;
+            }
+            // Use optimizePostImagePath to handle folder-based posts and WebP conversion
+            const optimizedPath = optimizePostImagePath(imagePath, (post as any).id, (post as any).id);
+            // optimizedPath always starts with /, so remove it since siteUrl already ends with /
+            return `${siteUrl}${optimizedPath.startsWith('/') ? optimizedPath.slice(1) : optimizedPath}`;
+          })()}</image>`,
         ]
           .filter(Boolean)
           .join(""),
@@ -111,9 +111,8 @@ export async function GET() {
     // RSS 2.0 extensions
     customData: `
       <language>${siteConfig.language}</language>
-      <copyright>Copyright © ${new Date().getFullYear()} ${
-      siteConfig.author
-    }</copyright>
+      <copyright>Copyright © ${new Date().getFullYear()} ${siteConfig.author
+      }</copyright>
       <managingEditor>${siteConfig.author}</managingEditor>
       <webMaster>${siteConfig.author}</webMaster>
       <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>

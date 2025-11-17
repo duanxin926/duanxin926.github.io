@@ -51,9 +51,7 @@ export async function GET() {
 
   // Filter and sort posts based on environment
   const isDev = import.meta.env.DEV;
-  const visiblePosts = posts.filter(
-    (post) => (post as any).data?.draft !== true
-  );
+  const visiblePosts = posts.filter((post) => shouldShowPost(post, isDev));
   const sortedPosts = sortPostsByDate(visiblePosts);
 
   const siteUrl = normalizeSiteUrl(import.meta.env.SITE || siteConfig.site);

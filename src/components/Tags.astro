@@ -5,11 +5,12 @@ import Icon from './Icon.astro';
 export interface Props {
   tags: string[];
   currentTag?: string;
+  currentCategory?: string;
   showCount?: boolean;
   variant?: 'default' | 'outline' | 'minimal';
 }
 
-const { tags, currentTag, showCount = false, variant = 'default' } = Astro.props;
+const { tags, currentTag, currentCategory, showCount = false, variant = 'default' } = Astro.props;
 
 // Sort tags alphabetically
 const sortedTags = [...tags].sort();
@@ -23,23 +24,27 @@ const sortedTags = [...tags].sort();
     </h3>
 
     <div class="flex flex-wrap gap-2">
-      {sortedTags.map(tag => (
-        <a
-          href={`/posts/tag/${encodeURIComponent(tag)}`}
-          class={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
-            currentTag === tag
-              ? 'bg-highlight-100 dark:bg-highlight-900/40 text-highlight-800 dark:text-highlight-200 ring-1 ring-highlight-300 dark:ring-highlight-700'
-              : 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 hover:text-primary-800 dark:hover:text-primary-200'
-          }`}
-        >
-          <span class="tag-text">{tag}</span>
-          {showCount && (
-            <span class="tag-count">
-              {/* This would be populated by JavaScript or server-side logic */}
-            </span>
-          )}
-        </a>
-      ))}
+      {sortedTags.map(tag => {
+        const isSelected = currentTag === tag;
+        
+        return (
+          <button
+            data-tag={tag}
+            class={`tag-item inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
+              isSelected
+                ? 'bg-highlight-100 dark:bg-highlight-900/40 text-highlight-800 dark:text-highlight-200 ring-1 ring-highlight-300 dark:ring-highlight-700'
+                : 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 hover:text-primary-800 dark:hover:text-primary-200'
+            }`}
+          >
+            <span class="tag-text">{tag}</span>
+            {showCount && (
+              <span class="tag-count">
+                {/* This would be populated by JavaScript or server-side logic */}
+              </span>
+            )}
+          </button>
+        );
+      })}
     </div>
   </div>
 )}

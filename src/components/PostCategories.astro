@@ -5,11 +5,12 @@ import Icon from './Icon.astro';
 export interface Props {
   categories: string[];
   currentCategory?: string;
+  currentTag?: string;
   showCount?: boolean;
   variant?: 'default' | 'outline' | 'minimal';
 }
 
-const { categories, currentCategory, showCount = false, variant = 'default' } = Astro.props;
+const { categories, currentCategory, currentTag, showCount = false, variant = 'default' } = Astro.props;
 
 // Sort categories alphabetically
 const sortedCategories = [...categories].sort();
@@ -23,23 +24,27 @@ const sortedCategories = [...categories].sort();
     </h3>
 
     <div class="flex flex-wrap gap-2">
-      {sortedCategories.map(category => (
-        <a
-          href={`/posts/category/${encodeURIComponent(category)}`}
-          class={`inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
-            currentCategory === category
-              ? 'bg-highlight-100 dark:bg-highlight-900/40 text-highlight-800 dark:text-highlight-200 ring-1 ring-highlight-300 dark:ring-highlight-700'
-              : 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 hover:text-primary-800 dark:hover:text-primary-200'
-          }`}
-        >
-          <span class="category-text">{category}</span>
-          {showCount && (
-            <span class="category-count">
-              {/* This would be populated by JavaScript or server-side logic */}
-            </span>
-          )}
-        </a>
-      ))}
+      {sortedCategories.map(category => {
+        const isSelected = currentCategory === category;
+        
+        return (
+          <button
+            data-category={category}
+            class={`category-item inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
+              isSelected
+                ? 'bg-highlight-100 dark:bg-highlight-900/40 text-highlight-800 dark:text-highlight-200 ring-1 ring-highlight-300 dark:ring-highlight-700'
+                : 'bg-primary-100 dark:bg-primary-800 text-primary-700 dark:text-primary-300 hover:bg-primary-200 dark:hover:bg-primary-700 hover:text-primary-800 dark:hover:text-primary-200'
+            }`}
+          >
+            <span class="category-text">{category}</span>
+            {showCount && (
+              <span class="category-count">
+                {/* This would be populated by JavaScript or server-side logic */}
+              </span>
+            )}
+          </button>
+        );
+      })}
     </div>
   </div>
 )}

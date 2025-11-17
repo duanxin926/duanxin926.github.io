@@ -12,5 +12,5 @@ imageOG: false
 hideCoverImage: false
 hideTOC: true
 targetKeyword: ""
-draft: false
+draft: true
 ---

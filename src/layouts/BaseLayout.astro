@@ -1120,6 +1120,8 @@ const scrollbarClass = siteConfig.hideScrollBar ? '' : 'show-scrollbars';
   <!-- Category Filter -->
   <CategoryFilter />
 
+  <!-- Post Filtering Script -->
+  <script src="/scripts/post-filtering.js" defer></script>
 
     <!-- Mermaid diagrams handled by client script -->
     <script>
@@ -1439,6 +1441,10 @@ const scrollbarClass = siteConfig.hideScrollBar ? '' : 'show-scrollbars';
             // Initialize category filtering
             if (typeof window['initializeCategoryFiltering'] === 'function') {
               window['initializeCategoryFiltering']();
+            }
+            // Initialize post filtering
+            if (typeof window['initializePostFiltering'] === 'function') {
+              window['initializePostFiltering']();
             }
             // Initialize table of contents
             if (window.initializeTableOfContents) {
@@ -2035,6 +2041,10 @@ const scrollbarClass = siteConfig.hideScrollBar ? '' : 'show-scrollbars';
           // Initialize table of contents after page transition is complete
           if (window.initializeTableOfContents) {
             window.initializeTableOfContents();
+          }
+          // Initialize post filtering after page transition is complete
+          if (typeof window['initializePostFiltering'] === 'function') {
+            window['initializePostFiltering']();
           }
           // Initialize Twitter widgets after page transition is complete
           if (window.initializeTwitterWidgets) {

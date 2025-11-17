@@ -198,6 +198,22 @@ const pagination = {
       </header>
 
       <div class="relative">
+        <!-- Mobile sidebar - appears above content on mobile/tablet -->
+        <div class="xl:hidden mb-8 flex flex-col sm:flex-row gap-4">
+          <!-- Categories -->
+          {siteConfig.postOptions.tags && allCategories.length > 0 && (
+            <div class="flex-1 min-w-0">
+              <PostCategories categories={allCategories} currentCategory={category} currentTag={undefined} />
+            </div>
+          )}
+          <!-- Tags -->
+          {siteConfig.postOptions.tags && allTags.length > 0 && (
+            <div class="flex-1 min-w-0">
+              <Tags tags={allTags} currentTag={undefined} currentCategory={category} />
+            </div>
+          )}
+        </div>
+
         <!-- Main content -->
         <div class="max-w-none">
           <!-- Posts list -->
@@ -211,28 +227,16 @@ const pagination = {
           <Pagination pagination={pagination} baseUrl={baseUrl} />
         </div>
 
-        <!-- Mobile sidebar - appears below content on mobile/tablet -->
-        <div class="xl:hidden mt-12 space-y-6">
-          <!-- Categories -->
-          {siteConfig.postOptions.tags && allCategories.length > 0 && (
-            <PostCategories categories={allCategories} currentCategory={category} />
-          )}
-          <!-- Tags -->
-          {siteConfig.postOptions.tags && allTags.length > 0 && (
-            <Tags tags={allTags} />
-          )}
-        </div>
-
         <!-- Desktop sidebar - floats to the right of the content container -->
         <div class="hidden xl:block absolute top-0 left-full ml-8 w-64">
           <div class="sticky top-24 space-y-3 max-h-[calc(100vh-12rem)] overflow-y-auto pb-6">
             <!-- Categories -->
             {siteConfig.postOptions.tags && allCategories.length > 0 && (
-              <PostCategories categories={allCategories} currentCategory={category} />
+              <PostCategories categories={allCategories} currentCategory={category} currentTag={undefined} />
             )}
             <!-- Tags -->
             {siteConfig.postOptions.tags && allTags.length > 0 && (
-              <Tags tags={allTags} />
+              <Tags tags={allTags} currentTag={undefined} currentCategory={category} />
             )}
           </div>
         </div>

@@ -237,12 +237,7 @@ export function shouldShowPost(post: Post, isDev: boolean = false): boolean {
     return false;
   }
 
-  // In development, show all posts (even drafts)
-  if (isDev) {
-    return true;
-  }
-
-  // In production, hide drafts (draft: true or undefined draft defaults to false)
+  // Always hide drafts (draft: true) in both development and production
   if (draft === true) {
     return false;
   }

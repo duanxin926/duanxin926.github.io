@@ -3,9 +3,11 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import { shouldShowPost, sortPostsByDate, extractTags } from '@/utils/markdown';
+import { hasPostCategories, getPostCategories } from '@/utils/categories';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PostCard from '@/components/PostCard.astro';
 import Tags from '@/components/Tags.astro';
+import PostCategories from '@/components/PostCategories.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
 
@@ -91,6 +93,10 @@ const seoData = {
   ogType: 'website' as const
 };
 
+// Extract all unique categories from all posts (not just filtered)
+const postsHaveCategories = hasPostCategories(allPosts);
+const allCategories = postsHaveCategories ? getPostCategories(allPosts) : [];
+
 // Pagination info
 const baseUrl = `/posts/tag/${encodeURIComponent(tag)}`;
 const pagination = {
@@ -152,6 +158,22 @@ const pagination = {
       </header>
 
       <div class="relative">
+        <!-- Mobile sidebar - appears above content on mobile/tablet -->
+        <div class="xl:hidden mb-8 flex flex-col sm:flex-row gap-4">
+          <!-- Categories -->
+          {siteConfig.postOptions.tags && postsHaveCategories && allCategories.length > 0 && (
+            <div class="flex-1 min-w-0">
+              <PostCategories categories={allCategories} currentCategory={undefined} currentTag={tag} />
+            </div>
+          )}
+          <!-- Tags -->
+          {siteConfig.postOptions.tags && allTags.length > 0 && (
+            <div class="flex-1 min-w-0">
+              <Tags tags={allTags} currentTag={tag} currentCategory={undefined} />
+            </div>
+          )}
+        </div>
+
         <!-- Main content -->
         <div class="max-w-none">
           {paginatedPosts.length > 0 ? (
@@ -181,20 +203,16 @@ const pagination = {
           )}
         </div>
 
-        <!-- Mobile sidebar - appears below content on mobile/tablet -->
-        <div class="xl:hidden mt-12 space-y-6">
-          <!-- Tags -->
-          {siteConfig.postOptions.tags && allTags.length > 0 && (
-            <Tags tags={allTags} currentTag={tag} />
-          )}
-        </div>
-
         <!-- Desktop sidebar - floats to the right of the content container -->
         <div class="hidden xl:block absolute top-0 left-full ml-8 w-64">
           <div class="sticky top-24 space-y-3 max-h-[calc(100vh-12rem)] overflow-y-auto pb-6">
+            <!-- Categories -->
+            {siteConfig.postOptions.tags && postsHaveCategories && allCategories.length > 0 && (
+              <PostCategories categories={allCategories} currentCategory={undefined} currentTag={tag} />
+            )}
             <!-- Tags -->
             {siteConfig.postOptions.tags && allTags.length > 0 && (
-              <Tags tags={allTags} currentTag={tag} />
+              <Tags tags={allTags} currentTag={tag} currentCategory={undefined} />
             )}
           </div>
         </div>

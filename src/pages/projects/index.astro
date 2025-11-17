@@ -89,6 +89,14 @@ seoData.noIndex = (projectsPageContent?.data as any)?.noIndex || false;
       </header>
 
       <div class="relative">
+        <!-- Mobile sidebar - appears above content on mobile/tablet -->
+        <div class="xl:hidden mb-8">
+          <!-- Categories -->
+          {siteConfig.postOptions.tags && projectsHaveCategories && allCategories.length > 0 && (
+            <ProjectCategories categories={allCategories} />
+          )}
+        </div>
+
         <!-- Main content -->
         <div class="max-w-none">
           {visibleProjects.length > 0 ? (
@@ -115,14 +123,6 @@ seoData.noIndex = (projectsPageContent?.data as any)?.noIndex || false;
                 Check back soon for new projects!
               </p>
             </div>
-          )}
-        </div>
-
-        <!-- Mobile sidebar - appears below content on mobile/tablet -->
-        <div class="xl:hidden mt-12 space-y-6">
-          <!-- Categories -->
-          {siteConfig.postOptions.tags && projectsHaveCategories && allCategories.length > 0 && (
-            <ProjectCategories categories={allCategories} />
           )}
         </div>
 

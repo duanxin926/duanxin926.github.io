@@ -223,7 +223,7 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:TABLE_OF_CONTENTS_ENABLED]
     enabled: true,
     // [CONFIG:TABLE_OF_CONTENTS_DEPTH]
-    depth: 4, // Maximum heading depth to include in ToC (2-6, where 2=H2, 3=H3, etc.)
+    depth: 5, // Maximum heading depth to include in ToC (2-6, where 2=H2, 3=H3, etc.)
   },
   footer: {
     // [CONFIG:FOOTER_ENABLED]
@@ -386,9 +386,9 @@ export const siteConfig: SiteConfig = {
     tags: true,
     linkedMentions: {
       // [CONFIG:POST_OPTIONS_LINKED_MENTIONS_ENABLED]
-      enabled: true,
+      enabled: true, // 设置为 true 启用关联阅读
       // [CONFIG:POST_OPTIONS_LINKED_MENTIONS_COMPACT]
-      linkedMentionsCompact: false,
+      linkedMentionsCompact: true, // false = 详细模式显示摘录，true = 简洁模式只显示标题
     },
     graphView: {
       // [CONFIG:POST_OPTIONS_GRAPH_VIEW_ENABLED]

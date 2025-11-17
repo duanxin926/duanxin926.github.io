@@ -129,8 +129,9 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
 
   <div class="py-8 relative">
     <div class="mx-auto px-4 sm:px-6 lg:px-8 relative" style={`max-width: ${siteConfig.layout.contentWidth}`}>
-      <!-- Main content -->
-      <article class={`bg-primary-50 dark:bg-primary-900 rounded-lg border border-primary-200 dark:border-primary-700 shadow-sm ${siteConfig.postOptions.showPostCardCoverImages !== 'none' && post.data.image && post.data.hideCoverImage !== true ? 'overflow-hidden' : ''}`}>
+      <!-- Main content with TOC -->
+      <div class="lg:grid lg:grid-cols-[1fr_16rem] lg:gap-8">
+        <article class={`bg-primary-50 dark:bg-primary-900 rounded-lg border border-primary-200 dark:border-primary-700 shadow-sm ${siteConfig.postOptions.showPostCardCoverImages !== 'none' && post.data.image && post.data.hideCoverImage !== true ? 'overflow-hidden' : ''}`}>
         {/* Cover image - shown if global config allows and not hidden by frontmatter */}
         {siteConfig.postOptions.showPostCardCoverImages !== 'none' && post.data.image && post.data.hideCoverImage !== true && (() => {
           // Process image path similar to PostCard
@@ -261,6 +262,13 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
           <Content />
         </div>
 
+        <!-- Table of Contents for tablets/small desktops -->
+        {shouldShowTOC && (
+          <div class="lg:hidden mt-8">
+            <TableOfContents headings={toc} />
+          </div>
+        )}
+
         {siteConfig.postOptions.linkedMentions.enabled && (
           <LinkedMentions currentSlug={post.id} />
         )}
@@ -317,15 +325,14 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
         </div>
       </article>
 
-      <!-- Desktop Sidebar - floats to the right of the content container -->
-      <div class="hidden xl:block absolute top-0 left-full ml-1 w-64">
-        <div class={`top-24 ${hasLocalGraphConnections || shouldShowTOC ? 'space-y-4' : ''}`} id="sidebar">
+      <!-- Desktop Sidebar - sticky TOC in grid layout -->
+      <div class="hidden lg:block">
+        <div class="sticky top-24 space-y-4" id="sidebar">
           {hasLocalGraphConnections && (
             <div id="local-graph-sidebar">
               <LocalGraph currentSlug={post.id} />
             </div>
           )}
-
 
           {shouldShowTOC && (
             <div id="toc">
@@ -334,6 +341,7 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
           )}
         </div>
       </div>
+    </div>
     </div>
   </div>
 

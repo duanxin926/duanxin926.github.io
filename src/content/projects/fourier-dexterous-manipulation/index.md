@@ -4,6 +4,7 @@ description:
 date: 2024-12-20
 categories:
   - Manipulation
+  - Imitation Learning
 repositoryUrl:
 status: finished
 image: "[[manipulation.mp4]]"

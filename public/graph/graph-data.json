@@ -1,18 +1,25 @@
 {
   "nodes": [
     {
-      "id": "sample-folder-based-post",
+      "id": "from-policy-gradient-to-ppo",
       "type": "post",
-      "title": "Sample Folder-Based Post",
-      "slug": "sample-folder-based-post",
+      "title": "从策略梯度定理到 PPO Actor Loss",
+      "slug": "from-policy-gradient-to-ppo",
+      "connections": 0
+    },
+    {
+      "id": "policy-gradient-proof",
+      "type": "post",
+      "title": "策略梯度定理推导",
+      "slug": "policy-gradient-proof",
       "connections": 0
     }
   ],
   "connections": [],
   "metadata": {
-    "totalPosts": 1,
+    "totalPosts": 2,
     "totalConnections": 0,
     "maxNodesApplied": false,
-    "originalNodeCount": 1
+    "originalNodeCount": 2
   }
 }

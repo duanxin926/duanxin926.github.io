@@ -167,8 +167,6 @@ $$
 \nabla_\theta J(\theta) = E_{\tau \sim p_\theta(\tau)} \left[ \left( \sum_{t=0}^{T-1} \nabla_\theta \log \pi_\theta(a_t|s_t) \right) A(s_t, a_t)  \right]
 $$
 
-更多可参考[从策略梯度定理到 PPO Actor Loss](posts/from-policy-gradient-to-ppo)
-
 
 ## Reference
 [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347)

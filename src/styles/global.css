@@ -158,9 +158,23 @@ p:has(.katex-display) {
   --code-text: 240 240 240;
   --inline-code-bg: 240 240 240;
   --inline-code-text: 33 33 33;
-  
+
   /* Highlight/selection colors */
   --selection-bg: 112 135 148;
+
+  /* Custom heading color palette */
+  --charcoal-blue: #264653;
+  --verdigris: #2a9d8f;
+  --tuscan-sun: #e9c46a;
+  --sandy-brown: #f4a261;
+  --burnt-peach: #e76f51;
+
+  /* Dark theme versions */
+  --charcoal-blue-dark: #1e3a45;
+  --verdigris-dark: #1f7a6b;
+  --tuscan-sun-dark: #c4a14a;
+  --sandy-brown-dark: #d48845;
+  --burnt-peach-dark: #c55a3d;
 }
 
 .dark {
@@ -337,7 +351,7 @@ a:hover {
 }
 
 .wikilink-broken {
-  @apply text-red-500 cursor-not-allowed line-through no-underline;
+  @apply text-red-500 cursor-not-allowed line-through;
 }
 
 /* Code Styles - Working with Tailwind prose plugin */
@@ -784,19 +798,202 @@ textarea {
   font-display: var(--font-display, swap);
 }
 
-.prose h1 { @apply text-xl mt-8 mb-6; }
-.prose h2 { @apply text-lg mt-8 mb-4; }
-.prose h3 { @apply text-base mt-6 mb-3; }
-.prose h4 { @apply text-base mt-5 mb-2; }
-.prose h5 { @apply text-base mt-4 mb-2; }
-.prose h6 { @apply text-base mt-4 mb-2; }
-
-.prose h1 a, .prose h2 a, .prose h3 a, .prose h4 a, .prose h5 a, .prose h6 a {
-  @apply text-primary-900 dark:text-primary-50 no-underline transition-colors duration-200;
+/* Custom earth-tone heading styles with solid triangle icons */
+.prose h1 {
+  @apply font-bold text-3xl mt-8 mb-6;
+  /* H1 uses default black color */
+}
+.prose h1::before {
+  content: "▸ ";
+  /* H1 icon uses default color */
+  margin-right: 0.5rem;
 }
 
-.prose h1 a:hover, .prose h2 a:hover, .prose h3 a:hover, .prose h4 a:hover, .prose h5 a:hover, .prose h6 a:hover {
-  @apply text-highlight-600 dark:text-highlight-400 no-underline;
+.prose h2 {
+  @apply font-bold text-2xl mt-8 mb-4;
+  color: var(--burnt-peach);
+}
+.prose h2::before {
+  content: "▸ ";
+  color: var(--burnt-peach);
+  margin-right: 0.5rem;
+}
+
+.prose h3 {
+  @apply font-semibold text-xl mt-6 mb-3;
+  color: var(--tuscan-sun);
+}
+.prose h3::before {
+  content: "▸ ";
+  color: var(--tuscan-sun);
+  margin-right: 0.5rem;
+}
+
+.prose h4 {
+  @apply font-semibold text-lg mt-5 mb-2;
+  color: var(--verdigris);
+}
+.prose h4::before {
+  content: "▸ ";
+  color: var(--verdigris);
+  margin-right: 0.5rem;
+}
+
+.prose h5 {
+  @apply font-medium text-lg mt-4 mb-2;
+  color: var(--charcoal-blue);
+}
+.prose h5::before {
+  content: "▸ ";
+  color: var(--charcoal-blue);
+  margin-right: 0.5rem;
+}
+
+.prose h6 {
+  @apply font-medium text-base mt-4 mb-2;
+  /* H6 uses default black color */
+}
+.prose h6::before {
+  content: "▸ ";
+  /* H6 icon uses default color */
+  margin-right: 0.5rem;
+}
+
+/* Dark theme heading colors */
+.dark .prose h1 {
+  /* H1 uses default dark theme color */
+}
+.dark .prose h1::before {
+  /* H1 icon uses default dark theme color */
+}
+
+.dark .prose h2 {
+  color: var(--burnt-peach-dark);
+}
+.dark .prose h2::before {
+  color: var(--burnt-peach-dark);
+}
+
+.dark .prose h3 {
+  color: var(--tuscan-sun-dark);
+}
+.dark .prose h3::before {
+  color: var(--tuscan-sun-dark);
+}
+
+.dark .prose h4 {
+  color: var(--verdigris-dark);
+}
+.dark .prose h4::before {
+  color: var(--verdigris-dark);
+}
+
+.dark .prose h5 {
+  color: var(--charcoal-blue-dark);
+}
+.dark .prose h5::before {
+  color: var(--charcoal-blue-dark);
+}
+
+.dark .prose h6 {
+  /* H6 uses default dark theme color */
+}
+.dark .prose h6::before {
+  /* H6 icon uses default dark theme color */
+}
+
+/* Heading links - match their custom heading colors */
+.prose h1 a {
+  /* H1 uses default link color */
+  @apply no-underline transition-colors duration-200;
+}
+.prose h2 a {
+  color: var(--burnt-peach);
+  @apply no-underline transition-colors duration-200;
+}
+.prose h3 a {
+  color: var(--tuscan-sun);
+  @apply no-underline transition-colors duration-200;
+}
+.prose h4 a {
+  color: var(--verdigris);
+  @apply no-underline transition-colors duration-200;
+}
+.prose h5 a {
+  color: var(--charcoal-blue);
+  @apply no-underline transition-colors duration-200;
+}
+.prose h6 a {
+  /* H6 uses default link color */
+  @apply no-underline transition-colors duration-200;
+}
+
+/* Dark theme heading links */
+.dark .prose h1 a {
+  /* H1 uses default dark link color */
+}
+.dark .prose h2 a {
+  color: var(--burnt-peach-dark);
+}
+.dark .prose h3 a {
+  color: var(--tuscan-sun-dark);
+}
+.dark .prose h4 a {
+  color: var(--verdigris-dark);
+}
+.dark .prose h5 a {
+  color: var(--charcoal-blue-dark);
+}
+.dark .prose h6 a {
+  /* H6 uses default dark link color */
+}
+
+/* Heading link hover effects - use darker versions of their own colors in light mode */
+.prose h1 a:hover {
+  /* H1 uses default hover color */
+  @apply no-underline;
+}
+.prose h2 a:hover {
+  color: var(--burnt-peach-dark);
+  @apply no-underline;
+}
+.prose h3 a:hover {
+  color: var(--tuscan-sun-dark);
+  @apply no-underline;
+}
+.prose h4 a:hover {
+  color: var(--verdigris-dark);
+  @apply no-underline;
+}
+.prose h5 a:hover {
+  color: var(--charcoal-blue-dark);
+  @apply no-underline;
+}
+.prose h6 a:hover {
+  /* H6 uses default hover color */
+  @apply no-underline;
+}
+
+/* Dark theme heading link hover - use highlight colors for H1/H6, original colors for others */
+.dark .prose h1 a:hover,
+.dark .prose h6 a:hover {
+  @apply text-highlight-600 no-underline;
+}
+.dark .prose h2 a:hover {
+  color: var(--burnt-peach);
+  @apply no-underline;
+}
+.dark .prose h3 a:hover {
+  color: var(--tuscan-sun);
+  @apply no-underline;
+}
+.dark .prose h4 a:hover {
+  color: var(--verdigris);
+  @apply no-underline;
+}
+.dark .prose h5 a:hover {
+  color: var(--charcoal-blue);
+  @apply no-underline;
 }
 
 .prose a {  

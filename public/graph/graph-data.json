@@ -12,20 +12,27 @@
       "type": "post",
       "title": "策略梯度定理推导",
       "slug": "policy-gradient-proof",
-      "connections": 1
+      "connections": 0
+    },
+    {
+      "id": "rainbow-headings",
+      "type": "post",
+      "title": "地球色调标题测试",
+      "slug": "rainbow-headings",
+      "connections": 0
     }
   ],
   "connections": [
     {
-      "source": "policy-gradient-proof",
-      "target": "from-policy-gradient-to-ppo",
+      "source": "from-policy-gradient-to-ppo",
+      "target": "policy-gradient-proof",
       "type": "link"
     }
   ],
   "metadata": {
-    "totalPosts": 2,
+    "totalPosts": 3,
     "totalConnections": 1,
     "maxNodesApplied": false,
-    "originalNodeCount": 2
+    "originalNodeCount": 3
   }
 }

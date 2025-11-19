@@ -55,6 +55,9 @@ const scrollbarClass = siteConfig.hideScrollBar ? '' : 'show-scrollbars';
   <meta name="description" content={seoData.description}>
   <link rel="canonical" href={seoData.canonical}>
 
+  <!-- RSS Feed -->
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+
   <!-- Robots meta tag -->
   {seoData.noIndex && (
     <meta name="robots" content="noindex, nofollow">

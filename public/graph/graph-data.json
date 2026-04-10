@@ -8,6 +8,13 @@
       "connections": 1
     },
     {
+      "id": "pi0.6-star",
+      "type": "post",
+      "title": "论文理解-Pi0.6-star",
+      "slug": "pi0.6-star",
+      "connections": 0
+    },
+    {
       "id": "policy-gradient-proof",
       "type": "post",
       "title": "策略梯度定理推导",
@@ -23,9 +30,9 @@
     }
   ],
   "metadata": {
-    "totalPosts": 2,
+    "totalPosts": 3,
     "totalConnections": 1,
     "maxNodesApplied": false,
-    "originalNodeCount": 2
+    "originalNodeCount": 3
   }
 }

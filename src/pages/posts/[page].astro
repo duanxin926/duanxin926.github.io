@@ -11,8 +11,13 @@ import Tags from '@/components/Tags.astro';
 import PostCategories from '@/components/PostCategories.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
+import { HIDE_BLOG_LISTING_PAGES } from '@/utils/visibility';
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  if (HIDE_BLOG_LISTING_PAGES) {
+    return [];
+  }
+
   // Get all posts
   const allPosts = await getCollection('posts');
 
@@ -43,6 +48,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   return paths;
 };
+
+if (HIDE_BLOG_LISTING_PAGES) {
+  return Astro.redirect('/404');
+}
 
 export interface Props {
   posts: any[];

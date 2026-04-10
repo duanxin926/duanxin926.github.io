@@ -3,6 +3,7 @@ import type { Post } from '@/types';
 import { processImagesForLightbox, getOptimizedFormat } from '@/utils/images';
 import { siteConfig } from '@/config';
 import { formatDate, formatDateMobile, getReadingTimeMobile } from '@/utils/markdown';
+import { HIDE_BLOG_LISTING_PAGES } from '@/utils/visibility';
 import ImageGallery from './ImageGallery.astro';
 import TableOfContents from './TableOfContents.astro';
 import Button from './Button.astro';
@@ -92,7 +93,11 @@ const processedImage = (() => {
 
         {post.data.tags && post.data.tags.length > 0 && siteConfig.postOptions.tags && (
           <div class="flex flex-wrap gap-2 mb-8">
-            {post.data.tags.map(tag => (
+            {post.data.tags.map(tag => HIDE_BLOG_LISTING_PAGES ? (
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 dark:bg-primary-800 text-primary-800 dark:text-primary-200">
+                #{tag}
+              </span>
+            ) : (
               <a
                 href={`/posts?tag=${encodeURIComponent(tag)}`}
                 class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 dark:bg-primary-800 text-primary-800 dark:text-primary-200 hover:bg-primary-200 dark:hover:bg-primary-700 transition-colors"

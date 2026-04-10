@@ -3,6 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 import { formatDate, formatDateMobile, processMarkdown, calculateReadingTime, getReadingTimeMobile } from '../utils/markdown';
 import { siteConfig, getPostCardAspectRatio } from '../config';
 import { getOptimizedFormat } from '@/utils/images';
+import { HIDE_BLOG_LISTING_PAGES } from '@/utils/visibility';
 import ImageWrapper from './ImageWrapper.astro';
 
 interface Props {
@@ -206,7 +207,11 @@ const postTags = tags && Array.isArray(tags) ? tags.join(',') : '';
       {(categories && categories.length > 0 || tags && tags.length > 0) && siteConfig.postOptions.tags && (
         <div class="mt-3 post-card-links">
           {/* Display categories first */}
-          {categories && categories.length > 0 && categories.slice(0, 2).map((category) => (
+          {categories && categories.length > 0 && categories.slice(0, 2).map((category) => HIDE_BLOG_LISTING_PAGES ? (
+            <span class="inline-block text-xs text-highlight-700 dark:text-highlight-300 bg-highlight-50 dark:bg-highlight-900/30 px-2.5 py-1 rounded-full border border-highlight-200 dark:border-highlight-700 mr-2 mb-1">
+              {category}
+            </span>
+          ) : (
             <a
               href={`/posts/category/${encodeURIComponent(category)}`}
               class="inline-block text-xs text-highlight-700 dark:text-highlight-300 bg-highlight-50 dark:bg-highlight-900/30 px-2.5 py-1 rounded-full border border-highlight-200 dark:border-highlight-700 transition-colors hover:bg-highlight-100 dark:hover:bg-highlight-800 mr-2 mb-1"
@@ -216,7 +221,11 @@ const postTags = tags && Array.isArray(tags) ? tags.join(',') : '';
             </a>
           ))}
           {/* Display tags */}
-          {tags && tags.length > 0 && tags.slice(0, 3).map((tag) => (
+          {tags && tags.length > 0 && tags.slice(0, 3).map((tag) => HIDE_BLOG_LISTING_PAGES ? (
+            <span class="inline-block text-xs text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700 mr-2 mb-1">
+              #{tag}
+            </span>
+          ) : (
             <a
               href={`/posts/tag/${tag}`}
               class="inline-block text-xs text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700 transition-colors hover:bg-highlight-100 dark:hover:bg-highlight-800 mr-2 mb-1"

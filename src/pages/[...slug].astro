@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '@/config';
 import PageLayout from '@/layouts/PageLayout.astro';
+import { isHiddenStandalonePage } from '@/utils/visibility';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Get all pages
@@ -14,7 +15,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   // Filter out special pages that are handled by dedicated routes
   // Note: 'projects' and 'docs' are NOT filtered out here because they can be fallback pages
   const specialPageSlugs = ['home', '404'];
-  const visiblePages = pages.filter(page => !specialPageSlugs.includes(page.id));
+  const visiblePages = pages.filter(
+    (page) => !specialPageSlugs.includes(page.id) && !isHiddenStandalonePage(page.id)
+  );
 
   // Generate paths for regular pages
   const pagePaths = visiblePages.map(page => ({
@@ -59,6 +62,10 @@ const { page } = Astro.props;
 
 // Validate page data
 if (!page) {
+  return Astro.redirect('/404');
+}
+
+if (isHiddenStandalonePage(page.id)) {
   return Astro.redirect('/404');
 }
 

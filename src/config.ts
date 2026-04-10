@@ -99,9 +99,6 @@ export interface SiteConfig {
   
   // Home Options
   homeOptions: {
-    profile: {
-      enabled: boolean;
-    };
     featuredPost: {
       enabled: boolean;
       type: "latest" | "featured";
@@ -254,10 +251,10 @@ export const siteConfig: SiteConfig = {
     // [CONFIG:COMMAND_PALETTE_SHORTCUT]
     shortcut: "ctrl+K",
     // [CONFIG:COMMAND_PALETTE_PLACEHOLDER]
-    placeholder: "Search site",
+    placeholder: "Search posts",
     search: {
       // [CONFIG:COMMAND_PALETTE_SEARCH_POSTS]
-      posts: false,
+      posts: true,
       // [CONFIG:COMMAND_PALETTE_SEARCH_PAGES]
       pages: false,
       // [CONFIG:COMMAND_PALETTE_SEARCH_PROJECTS]
@@ -345,10 +342,6 @@ export const siteConfig: SiteConfig = {
 
   // Home Options
   homeOptions: {
-    profile: {
-      // [CONFIG:HOME_OPTIONS_PROFILE_ENABLED]
-      enabled: false, // Show self-introduction section on homepage
-    },
     featuredPost: {
       // [CONFIG:HOME_OPTIONS_FEATURED_POST_ENABLED]
       enabled: true, // Show featured post on homepage
@@ -359,7 +352,7 @@ export const siteConfig: SiteConfig = {
     },
     recentPosts: {
       // [CONFIG:HOME_OPTIONS_RECENT_POSTS_ENABLED]
-      enabled: false, // Show recent posts on homepage
+      enabled: true, // Show recent posts on homepage
       // [CONFIG:HOME_OPTIONS_RECENT_POSTS_COUNT]
       count: 7, // Number of recent posts to show
     },
@@ -711,9 +704,6 @@ function validateSiteConfig(config: SiteConfig): { isValid: boolean; errors: str
   }
 
   // Home options validation
-  if (typeof config.homeOptions.profile.enabled !== 'boolean') {
-    errors.push('Homepage profile section enabled setting must be a boolean value (true or false).');
-  }
   if (!['above', 'below', 'none'].includes(config.homeOptions.blurb.placement)) {
     errors.push(`Home blurb placement must be "above", "below", or "none". Current value "${config.homeOptions.blurb.placement}" is invalid.`);
   }

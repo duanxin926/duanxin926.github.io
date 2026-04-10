@@ -14,6 +14,7 @@ import GiscusComments from '@/components/GiscusComments.astro';
 import Lightbox from '@/components/Lightbox.astro';
 import Icon from '@/components/Icon.astro';
 import ImageWrapper from '@/components/ImageWrapper.astro';
+import { HIDE_BLOG_LISTING_PAGES } from '@/utils/visibility';
 import { devConfig } from '@/config/dev';
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -245,7 +246,11 @@ if (siteConfig.postOptions.graphView.enabled && siteConfig.postOptions.graphView
 
           {siteConfig.postOptions.tags && post.data.tags && post.data.tags.length > 0 && (
             <div class="flex flex-wrap gap-2 mb-8">
-              {post.data.tags.map(tag => (
+              {post.data.tags.map(tag => HIDE_BLOG_LISTING_PAGES ? (
+                <span class="text-xs text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700">
+                  {tag}
+                </span>
+              ) : (
                 <a
                   href={`/posts?tag=${encodeURIComponent(tag)}`}
                   class="text-xs text-primary-600 dark:text-primary-300 bg-primary-100 dark:bg-primary-800 px-2.5 py-1 rounded-full border border-primary-200 dark:border-primary-700 transition-colors hover:bg-highlight-100 dark:hover:bg-highlight-800"

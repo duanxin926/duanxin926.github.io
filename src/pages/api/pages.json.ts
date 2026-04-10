@@ -1,13 +1,14 @@
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { shouldShowContent } from "@/utils/markdown";
+import { isHiddenStandalonePage } from "@/utils/visibility";
 
 export const GET: APIRoute = async () => {
   try {
     const pages = await getCollection("pages");
     const isDev = import.meta.env.DEV;
     const visiblePages = pages.filter((page: any) => {
-      return shouldShowContent(page, isDev);
+      return shouldShowContent(page, isDev) && !isHiddenStandalonePage(page.id);
     });
 
     const result = visiblePages.map((page: any) => ({

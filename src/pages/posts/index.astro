@@ -11,6 +11,11 @@ import Tags from '@/components/Tags.astro';
 import PostCategories from '@/components/PostCategories.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
+import { HIDE_BLOG_LISTING_PAGES } from '@/utils/visibility';
+
+if (HIDE_BLOG_LISTING_PAGES) {
+  return Astro.redirect('/404');
+}
 
 // Get special content for posts page
 let postsPageContent: CollectionEntry<'special'>[] = [];

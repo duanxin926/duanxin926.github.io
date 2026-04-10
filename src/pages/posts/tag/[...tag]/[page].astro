@@ -10,8 +10,13 @@ import Tags from '@/components/Tags.astro';
 import PostCategories from '@/components/PostCategories.astro';
 import Pagination from '@/components/Pagination.astro';
 import Icon from '@/components/Icon.astro';
+import { HIDE_BLOG_LISTING_PAGES } from '@/utils/visibility';
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  if (HIDE_BLOG_LISTING_PAGES) {
+    return [];
+  }
+
   const isDev = import.meta.env.DEV;
   
   try {
@@ -61,6 +66,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
     return [];
   }
 };
+
+if (HIDE_BLOG_LISTING_PAGES) {
+  return Astro.redirect('/404');
+}
 
 const { tag, allPosts, allTags, currentPage } = Astro.props as {
   tag: string;
